@@ -7,10 +7,13 @@ import FindChat from "./pages/chat/FindChat"
 import Chat from "./pages/chat/Chat"
 import Login from "./components/global/Login"
 import Signup from "./components/global/Signup"
+import Navbar from "./components/global/Navbar"
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
+
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/findChat" element={<FindChat />} />
