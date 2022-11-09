@@ -2,9 +2,15 @@
   font-family: Arial, Helvetica, sans-serif;
 
   --main-yellow: #FCB43A; 
+  --dark: hsl(0, 0%, 21%);
 }
-
 
 #navTitle {
   color: var(--main-yellow) !important;
+}
+
+@media screen and (max-width: 1023px) {
+  .navbar-menu .navbar-item:hover{
+    color: var(--dark) !important
+}
 }
