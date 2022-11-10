@@ -1,3 +1,10 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
+
+  --main-yellow: #FCB43A; 
+}
+
+
+#navTitle {
+  color: var(--main-yellow) !important;
 }
