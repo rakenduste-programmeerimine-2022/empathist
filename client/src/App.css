@@ -12,5 +12,13 @@
 @media screen and (max-width: 1023px) {
   .navbar-menu .navbar-item:hover{
     color: var(--dark) !important
+  }
+  .navbar-link:hover{
+    color: var(--dark) !important;
+  }
 }
+
+.navbar-dropdown .navbar-item:hover{
+  color: var(--dark) !important;
 }
+
