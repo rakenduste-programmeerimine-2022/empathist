@@ -49,18 +49,23 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="navbar-end">
-            <Link
-              className="navbar-item is-size-4 mx-3 has-text-light has-text-light"
-              to="login"
-            >
-              Login
-            </Link>
-            <Link
-              className="navbar-item is-size-4 mx-3 has-text-light"
-              to="signup"
-            >
-              Sign up
-            </Link>
+            <div className="navbar-item has-dropdown is-hoverable mr-3">
+              <div className="navbar-link has-text-light">Profile</div>
+              <div className="navbar-dropdown is-right has-background-dark">
+                <Link
+                  className="navbar-item is-size-4 has-text-light"
+                  to="login"
+                >
+                  Login
+                </Link>
+                <Link
+                  className="navbar-item is-size-4 has-text-light"
+                  to="signup"
+                >
+                  Sign up
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
