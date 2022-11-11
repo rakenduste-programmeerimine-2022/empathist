@@ -4,8 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express()
 const WSServer = require('express-ws')(app)
+const errorMiddleware = require('./middlewares/error-middleware')
 require('dotenv').config()
-//const user = require('./routes/user-routes')
+const user = require('./routes/user-routes')
 //const chat = require('./routes/chat-routes')
 
 
@@ -17,12 +18,14 @@ app.use(cors({
     origin: process.env.CLIENT_URL
 }))
 
-//app.use('/user',user)
+app.use('/user',user)
 //app.use('/chat',chat)
 
 app.get('*', (req, res) => {
     res.send(`<h1>There's definitely something interesting around here, just keep looking...</h1>`)
 })
+
+app.use(errorMiddleware)
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@empathist.epepriy.mongodb.net/?retryWrites=true&w=majority`
 const connectToDB = async () => {
