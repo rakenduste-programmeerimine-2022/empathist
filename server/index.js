@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require("morgan");
 const cors = require("cors");
+const cookieParser = require("cookie-parser")
 const mongoose = require("mongoose");
 const app = express()
 const WSServer = require('express-ws')(app)
@@ -13,11 +14,12 @@ const user = require('./routes/user-routes')
 const PORT = process.env.PORT || 5000
 
 app.use(morgan('dev'))
+app.use(express.json())
 app.use(cors({
     credentials:true,
     origin: process.env.CLIENT_URL
 }))
-
+app.use(cookieParser())
 app.use('/user',user)
 //app.use('/chat',chat)
 
