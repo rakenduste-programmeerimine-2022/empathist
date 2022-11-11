@@ -3,6 +3,7 @@
 
   --main-yellow: #FCB43A; 
   --dark: hsl(0, 0%, 21%);
+  --light: hsl(0, 0%, 98%);
 }
 
 #navTitle {
@@ -19,6 +20,6 @@
 }
 
 .navbar-dropdown .navbar-item:hover{
-  color: var(--dark) !important;
+  color: var(--light) !important;
 }
 

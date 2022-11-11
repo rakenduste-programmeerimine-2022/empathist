@@ -1,9 +1,24 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import {useNavbarStore, useUserStore} from "../../store/store";
+
+const pages = [{name:"Welcome",path:"/"},{name:"Find chat",path:"/findchat"},{name:"Chat",path:"/chat"}]
 
 const Navbar = () => {
   const [navToggle, setNavToggle] = useState("")
   const [navMenu, setNavMenu] = useState("")
+  const loginClick = useNavbarStore((state) => state.incrementLoginButtonClicks)
+  const clicks = useNavbarStore((state) => state.loginButtonClicks)
+  const isAuth = useUserStore((state) => state.isAuth)
+  const logout = useUserStore((state) => state.logout)
+
+  const handleLoginClick = () => {
+    loginClick()
+    console.log(clicks)
+  }
+  const handleSignupClick = () => {
+    console.log("Signup clicked")
+  }
 
   const handleNavToggle = () => {
     navToggle === "" ? setNavToggle("is-active") : setNavToggle("")
@@ -38,32 +53,28 @@ const Navbar = () => {
           className={`navbar-menu is-size-4 has-background-dark ${navMenu}`}
         >
           <div className="navbar-start">
-            <Link id="navItem" className="navbar-item has-text-light" to="/">
-              Welcome
-            </Link>
-            <Link className="navbar-item has-text-light" to="findChat">
-              Find chat
-            </Link>
-            <Link className="navbar-item has-text-light" to="chat">
-              Chat
-            </Link>
+            {pages.map((page) =>
+                <Link key={page.name} id="navItem" className="navbar-item has-text-light" to={page.path}>
+                  {page.name}
+                </Link>)}
           </div>
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable mr-3">
               <div className="navbar-link has-text-light">Profile</div>
               <div className="navbar-dropdown is-right has-background-dark">
-                <Link
-                  className="navbar-item is-size-4 has-text-light"
-                  to="login"
+                {isAuth?<button className="navbar-item is-size-4 button is-ghost has-text-black" onClick={()=>logout()}>Logout</button>:
+                    <button
+                  className="navbar-item is-size-4 button is-ghost has-text-black "
+                  onClick={() => handleLoginClick()}
                 >
                   Login
-                </Link>
-                <Link
-                  className="navbar-item is-size-4 has-text-light"
-                  to="signup"
+                </button>}
+                <button
+                  className="navbar-item is-size-4 button is-ghost has-text-black"
+                  onClick={() => handleSignupClick()}
                 >
                   Sign up
-                </Link>
+                </button>
               </div>
             </div>
           </div>
