@@ -1,23 +1,32 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import {useNavbarStore, useUserStore} from "../../store/store";
-
-const pages = [{name:"Welcome",path:"/"},{name:"Find chat",path:"/findchat"},{name:"Chat",path:"/chat"}]
+import { useNavbarStore, useUserStore } from "../../store/store"
+import Signup from "./Signup"
+import Login from "./Login"
+const pages = [
+  { name: "Welcome", path: "/" },
+  { name: "Find chat", path: "/findchat" },
+  { name: "Chat", path: "/chat" },
+]
 
 const Navbar = () => {
   const [navToggle, setNavToggle] = useState("")
   const [navMenu, setNavMenu] = useState("")
-  const loginClick = useNavbarStore((state) => state.incrementLoginButtonClicks)
-  const clicks = useNavbarStore((state) => state.loginButtonClicks)
   const isAuth = useUserStore((state) => state.isAuth)
   const logout = useUserStore((state) => state.logout)
+  const [signupModal, setSignupModal] = useState(false)
+  const [loginModal, setLoginModal] = useState(false)
 
   const handleLoginClick = () => {
-    loginClick()
-    console.log(clicks)
+    setLoginModal(true)
+    setNavMenu("")
+    setNavToggle("")
   }
+
   const handleSignupClick = () => {
-    console.log("Signup clicked")
+    setSignupModal(true)
+    setNavMenu("")
+    setNavToggle("")
   }
 
   const handleNavToggle = () => {
@@ -53,22 +62,36 @@ const Navbar = () => {
           className={`navbar-menu is-size-4 has-background-dark ${navMenu}`}
         >
           <div className="navbar-start">
-            {pages.map((page) =>
-                <Link key={page.name} id="navItem" className="navbar-item has-text-light" to={page.path}>
-                  {page.name}
-                </Link>)}
+            {pages.map((page) => (
+              <Link
+                key={page.name}
+                id="navItem"
+                className="navbar-item has-text-light"
+                to={page.path}
+              >
+                {page.name}
+              </Link>
+            ))}
           </div>
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable mr-3">
               <div className="navbar-link has-text-light">Profile</div>
               <div className="navbar-dropdown is-right has-background-dark">
-                {isAuth?<button className="navbar-item is-size-4 button is-ghost has-text-black" onClick={()=>logout()}>Logout</button>:
-                    <button
-                  className="navbar-item is-size-4 button is-ghost has-text-black "
-                  onClick={() => handleLoginClick()}
-                >
-                  Login
-                </button>}
+                {isAuth ? (
+                  <button
+                    className="navbar-item is-size-4 button is-ghost has-text-black"
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <button
+                    className="navbar-item is-size-4 button is-ghost has-text-black"
+                    onClick={() => handleLoginClick()}
+                  >
+                    Login
+                  </button>
+                )}
                 <button
                   className="navbar-item is-size-4 button is-ghost has-text-black"
                   onClick={() => handleSignupClick()}
@@ -80,6 +103,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+      <Signup isActive={signupModal} setIsActive={setSignupModal} />
+      <Login isActive={loginModal} setIsActive={setLoginModal} />
     </>
   )
 }
