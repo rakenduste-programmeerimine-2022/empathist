@@ -3,10 +3,17 @@ import { Link } from "react-router-dom"
 import { useNavbarStore, useUserStore } from "../../store/store"
 import Signup from "./Signup"
 import Login from "./Login"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faHome,
+  faUser,
+  faMagnifyingGlass,
+  faMessage,
+} from "@fortawesome/free-solid-svg-icons"
 const pages = [
-  { name: "Welcome", path: "/" },
-  { name: "Find chat", path: "/findchat" },
-  { name: "Chat", path: "/chat" },
+  { name: "Welcome", path: "/", icon: faHome },
+  { name: "Find chat", path: "/findchat", icon: faMagnifyingGlass },
+  { name: "Chat", path: "/chat", icon: faMessage },
 ]
 
 const Navbar = () => {
@@ -66,16 +73,28 @@ const Navbar = () => {
               <Link
                 key={page.name}
                 id="navItem"
-                className="navbar-item has-text-light"
+                className="navbar-item has-text-light is-size-4 px-5"
                 to={page.path}
               >
-                {page.name}
+                <span className="icon-text">
+                  <span className="icon pr-2">
+                    <FontAwesomeIcon icon={page.icon} />
+                  </span>
+                  <span>{page.name}</span>
+                </span>
               </Link>
             ))}
           </div>
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable mr-3">
-              <div className="navbar-link has-text-light">Profile</div>
+              <div className="navbar-link has-text-light">
+                <span className="icon-text">
+                  <span className="icon pr-2">
+                    <FontAwesomeIcon icon={faUser} />
+                  </span>
+                  <span>Profile</span>
+                </span>
+              </div>
               <div className="navbar-dropdown is-right has-background-dark">
                 {isAuth ? (
                   <button
