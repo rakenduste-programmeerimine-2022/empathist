@@ -1,3 +1,4 @@
+import { useState } from "react"
 const messages = [
   {
     username: "firstUser",
@@ -21,9 +22,13 @@ const messages = [
 ]
 
 const Chat = () => {
+  const [message, setMessage] = useState("")
+  const handleMessageSubmit = (e) => {
+    console.log(message)
+  }
   return (
     <div>
-      <div className="container is-fluid has-background-light">
+      <div className="container is-fluid">
         <div className="title pt-5">Chat page</div>
         <div className="columns pt-3">
           <div className="column is-half">
@@ -56,8 +61,15 @@ const Chat = () => {
                     className="textarea has-fixed-size"
                     placeholder="Type your message here..."
                     rows="2"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                   ></textarea>
-                  <button className="button is-info mt-3">Send</button>
+                  <button
+                    className="button is-info mt-3"
+                    onClick={(e) => handleMessageSubmit(e)}
+                  >
+                    Send
+                  </button>
                 </section>
               </section>
             </div>
