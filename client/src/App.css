@@ -23,3 +23,24 @@
   color: var(--light) !important;
 }
 
+.is-halfheight{
+  height: 70vh;
+}
+
+.chat{
+  overflow-y: auto;
+  flex-direction: column;
+  height: 70%;
+}
+
+.message{
+  max-width: 70%;
+}
+
+.left{
+  align-self: flex-start;
+}
+
+.right{
+  align-self: flex-end;
+}
