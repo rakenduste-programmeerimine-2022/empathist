@@ -1,4 +1,7 @@
 import { useState } from "react"
+import FindChat from "./FindChat"
+import { useUserStore } from "../../store/store"
+
 const messages = [
   {
     username: "firstUser",
@@ -34,12 +37,12 @@ const Chat = () => {
           <div className="column is-half">
             <div className="box">
               <section className="hero is-halfheight">
-                <div className="title">Canvas</div>
+                {useUserStore.getState().isAuth ? <Canvas /> : <FindChat />}
               </section>
             </div>
           </div>
           <div className="column is-half">
-            <div className="box">
+            <div className="box chat-box">
               <section className="hero is-halfheight">
                 <section className="hero-head">
                   <div className="title">Chat</div>
@@ -80,3 +83,13 @@ const Chat = () => {
   )
 }
 export default Chat
+
+const Canvas = () => {
+  return (
+    <>
+      <section className="hero-head">
+        <div className="title">Canvas</div>
+      </section>
+    </>
+  )
+}
