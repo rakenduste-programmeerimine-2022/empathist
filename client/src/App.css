@@ -23,6 +23,10 @@
   color: var(--light) !important;
 }
 
+.box{
+  min-height: 25rem;
+}
+
 .is-halfheight{
   height: 70vh;
 }
@@ -30,7 +34,7 @@
 .chat{
   overflow-y: auto;
   flex-direction: column;
-  height: 70%;
+  height: 50%;
 }
 
 .message{
