@@ -31,6 +31,10 @@
   height: 70vh;
 }
 
+.box{
+  min-height: 25rem;
+}
+
 .chat{
   overflow-y: auto;
   flex-direction: column;
@@ -38,7 +42,7 @@
 }
 
 .message{
-  max-width: 70%;
+  max-width: 50%;
 }
 
 .left{
