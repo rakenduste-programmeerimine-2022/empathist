@@ -23,6 +23,7 @@
   color: var(--light) !important;
 }
 
+
 .box{
   min-height: 25rem;
 }
@@ -42,7 +43,7 @@
 }
 
 .message{
-  max-width: 50%;
+  max-width: 70%;
 }
 
 .left{
