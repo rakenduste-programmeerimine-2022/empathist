@@ -1,15 +1,26 @@
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import {useNavbarStore, useUserStore} from "../../store/store";
 
 const Signup = ({ isActive, setIsActive }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
+  const registration = useUserStore((state) => state.registration)
+    const setIsLoginOpen = useNavbarStore((state) => state.setIsLoginOpen)
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    console.log(username, password, email)
+  const handleRegistration = () =>{
+    registration(email,password,username)
+        .then(()=>setEmail(''))
+        .then(()=>setPassword(''))
+        .then(()=>setIsActive(false))
   }
+
+  const handleSwitch = () => {
+    setIsLoginOpen(true)
+    setIsActive(false)
+  }
+
   return (
     <>
       <div className={isActive ? "modal is-active" : "modal"}>
@@ -24,7 +35,6 @@ const Signup = ({ isActive, setIsActive }) => {
             ></button>
           </header>
           <section className="modal-card-body">
-            <form onSubmit={handleFormSubmit}>
               <div className="field">
                 <label className="label is-size-5">Username</label>
                 <div className="control">
@@ -63,12 +73,12 @@ const Signup = ({ isActive, setIsActive }) => {
               </div>
               <div className="field">
                 <p>
-                  Already have an account? <Link>Login</Link>
+                  Already have an account? <button className="button is-text" style={{color:"#2565AE"}} onClick={handleSwitch}>Login</button>
                 </p>
               </div>
               <div className="field is-grouped">
                 <p className="control">
-                  <button className="button is-link" type="submit">
+                  <button onClick={handleRegistration} className="button is-link" >
                     Submit
                   </button>
                 </p>
@@ -81,7 +91,6 @@ const Signup = ({ isActive, setIsActive }) => {
                   </button>
                 </p>
               </div>
-            </form>
           </section>
         </div>
       </div>
