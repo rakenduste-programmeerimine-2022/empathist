@@ -26,7 +26,6 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/findChat" element={<FindChat />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
