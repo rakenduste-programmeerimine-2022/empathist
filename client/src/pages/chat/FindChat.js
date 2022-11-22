@@ -1,36 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons"
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import { useState} from "react"
+import {useUserStore} from "../../store/store";
 
 const searchOptions = [{ name: "By name" }]
-const chatList = [
-  {
-    chatroomName: "Chat room 1",
-  },
-  {
-    chatroomName: "Chat room 2",
-  },
-  {
-    chatroomName: "Chat room 3",
-  },
-  {
-    chatroomName: "Chat room 4",
-  },
-  {
-    chatroomName: "Chat room 5",
-  },
-  {
-    chatroomName: "Chat room 6",
-  },
-  {
-    chatroomName: "Chat room 7",
-  },
-]
 
-const FindChat = () => {
+const FindChat = ({rooms}) => {
   const [searchRequest, setSearchRequest] = useState("")
+  const enterRoom = useUserStore((state) => state.enterRoom)
   console.log(searchRequest)
+
 
   return (
     <>
@@ -71,12 +51,12 @@ const FindChat = () => {
         </div>
       </section>
       <section className="hero-body p-2 mt-3 chat-list">
-        {chatList.map((chatRoom) => (
-          <div className="notification chat-item">
-            <p className="is-size-2 has-text-weight-medium">
-              {chatRoom.chatroomName}
+        {rooms.map((room) => (
+          <div key={room.id} className="notification chat-item">
+            <p className="is-size-3 has-text-weight-medium">
+              {room.name} | {room.users} {room.users === 1 ? "user" : "users"} | {room.type} room
             </p>
-            <div className="button is-info px-5 is-size-5">Join</div>
+            <div className="button is-info px-5 is-size-5" onClick={()=>enterRoom(room.id)}>Join</div>
           </div>
         ))}
       </section>
