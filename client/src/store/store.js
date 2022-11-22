@@ -26,9 +26,9 @@ export const useUserStore = create((set) => ({
             console.log(err.response?.data?.message)
         }
     },
-    registration: async (email, password) => {
+    registration: async (email, password,username) => {
         try {
-            const response = await AuthService.registration(email,password)
+            const response = await AuthService.registration(email,password,username)
             console.log(response)
             localStorage.setItem('token',response.data.accessToken)
             set(() => ({isAuth: true}))

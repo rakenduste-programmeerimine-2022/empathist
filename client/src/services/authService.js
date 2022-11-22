@@ -5,8 +5,8 @@ export default class AuthService{
     static async login(email,password){
         return $user.post('/login',{email,password})
     }
-    static async registration(email,password){
-        return $user.post('/registration',{email,password})
+    static async registration(email,password,username){
+        return $user.post('/registration',{email,password,username})
     }
     static async logout(){
         return $user.post('/logout')
