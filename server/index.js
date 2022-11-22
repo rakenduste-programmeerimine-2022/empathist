@@ -43,8 +43,6 @@ let defaultMessage = {
 
 let bannedNames = ["server","admin","moderator"]
 
-let privateRooms = []
-
 let rooms = [
     {id:1, name:"Room 1", messages:[{...defaultMessage, content: "Welcome to room #1"}],users:[],type:"public",creator:"server"},
     {id:2, name:"Room 2", messages:[{...defaultMessage, content: "Welcome to room #2"}],users:[],type:"public",creator:"server"},
@@ -52,7 +50,6 @@ let rooms = [
 ]
 
 let activeUsers = []
-
 
 setInterval(handleDisconnect,10000)
 
@@ -73,7 +70,6 @@ function broadcast(roomID){
     roomID = parseInt(roomID)
     expressWs.getWss().clients.forEach(client => {
         console.log(`Checking ${client.username} in room ${client.roomID}`)
-        console.log(`private: ${privateRooms}`)
         if(client.roomID===roomID){
             console.log(`Broadcasting to ${client.username} in room ${client.roomID}`)
             const room = rooms.find(item=>item.id===roomID)
