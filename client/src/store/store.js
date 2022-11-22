@@ -6,22 +6,25 @@ import {API_URL} from "../http/interceptor";
 export const useNavbarStore = create((set) => ({
     isLoginOpen: false,
     isSignupOpen: false,
-    loginButtonClicks: 0,
+    isFindChatOpen: false,
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
-    setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value }))
+    setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
+    setIsFindChatOpen: (value) => set(() => ({ isFindChatOpen: value })),
+
 }))
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set,get) => ({
     user: {},
+    socket: null,
     isAuth: false,
-    setUser: (value) => set(() => ({ user: value })),
+    setSocket : (socket) => set(() => ({ socket: socket })),
+    setUser: (user) => set(() => ({ user: user })),
     login: async (email, password) => {
         try {
             const response = await AuthService.login(email, password)
-            console.log(response)
             localStorage.setItem('token', response.data.accessToken)
             set(() => ({isAuth: true}))
-            this.setUser(response.data.user)
+            set(() => ({ user: response.data.user }))
         } catch (err) {
             console.log(err.response?.data?.message)
         }
@@ -56,5 +59,9 @@ export const useUserStore = create((set) => ({
         }catch (err){
             console.log(err.response?.data?.message)
         }
+    },
+    enterRoom: (roomID) => {
+        console.log(`Trying to enter room ${roomID}`)
+        get().socket.send(JSON.stringify({event: "enter", roomID}))
     }
 }))

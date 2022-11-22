@@ -21,8 +21,12 @@ const Navbar = () => {
   const isAuth = useUserStore((state) => state.isAuth)
   const logout = useUserStore((state) => state.logout)
   const user = useUserStore((state) => state.user)
+  const setUser = useUserStore((state) => state.setUser)
+  const socket = useUserStore((state) => state.socket)
   const setIsLoginOpen = useNavbarStore((state) => state.setIsLoginOpen)
   const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
+  const setISFindChatOpen = useNavbarStore((state) => state.setIsFindChatOpen)
+  const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
   const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
 
@@ -41,6 +45,18 @@ const Navbar = () => {
   const handleNavToggle = () => {
     navToggle === "" ? setNavToggle("is-active") : setNavToggle("")
     navMenu === "" ? setNavMenu("is-active") : setNavMenu("")
+  }
+
+  const exitRoom = () => {
+      if (user.roomID){
+        console.log(`Trying to exit room ${user.roomID}`)
+        setUser({roomID: null})
+        socket.send(JSON.stringify({event: "exit", roomID: user.roomID}))
+
+    }
+    else {
+      console.log("You have not entered any room")
+    }
   }
 
   return (
@@ -89,6 +105,7 @@ const Navbar = () => {
                   id="navItem"
                   className="navbar-item has-text-light is-size-4 px-5"
                   to={chat.path}
+                  onClick={()=>setISFindChatOpen(false)}
               >
               <span className="icon-text">
                 <span className="icon pr-2">
@@ -97,6 +114,16 @@ const Navbar = () => {
                 <span>{user.roomID?chat.name:findChat.name}</span>
               </span>
               </Link>
+            {user.roomID&&<Link
+                onClick={isFindChatOpen?()=>setISFindChatOpen(false):()=>setISFindChatOpen(true)}
+                className=" navbar-item is-link has-text-light is-size-4 px-5">
+              <span className="icon-text">
+                <span className="icon pr-2">
+                  <FontAwesomeIcon icon={findChat.icon} />
+                </span>
+                <span>{findChat.name}</span>
+              </span>
+            </Link>}
 
           </div>
           <div className="navbar-end">
