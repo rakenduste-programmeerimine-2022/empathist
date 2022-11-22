@@ -21,6 +21,7 @@ const Navbar = () => {
   const [navMenu, setNavMenu] = useState("")
   const isAuth = useUserStore((state) => state.isAuth)
   const logout = useUserStore((state) => state.logout)
+  const user = useUserStore((state) => state.user)
   const setIsLoginOpen = useNavbarStore((state) => state.setIsLoginOpen)
   const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
   const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
@@ -94,7 +95,7 @@ const Navbar = () => {
                   <span className="icon pr-2">
                     <FontAwesomeIcon icon={faUser} />
                   </span>
-                  <span>Profile</span>
+                  <span>{isAuth?user.username:"Profile"}</span>
                 </span>
               </div>
               <div className="navbar-dropdown is-right has-background-dark">
@@ -113,12 +114,12 @@ const Navbar = () => {
                     Login
                   </button>
                 )}
-                <button
+                {!isAuth&&<button
                   className="navbar-item is-size-4 button is-ghost has-text-black"
                   onClick={() => handleSignupClick()}
                 >
                   Sign up
-                </button>
+                </button>}
               </div>
             </div>
           </div>

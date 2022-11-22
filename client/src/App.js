@@ -8,8 +8,19 @@ import Chat from "./pages/chat/Chat"
 import Login from "./components/global/Login"
 import Signup from "./components/global/Signup"
 import Navbar from "./components/global/Navbar"
+import {useUserStore} from "./store/store";
+import {useEffect} from "react";
 
 function App() {
+
+    const checkAuth = useUserStore((state) => state.checkAuth)
+    useEffect(()=>{
+        if (localStorage.getItem( ('token'))){
+            checkAuth()
+        }
+        // eslint-disable-next-line
+    },[])
+
   return (
     <div className="App">
       <Navbar />
