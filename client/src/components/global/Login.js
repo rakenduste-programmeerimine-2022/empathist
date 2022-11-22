@@ -1,14 +1,23 @@
-import { Link } from "react-router-dom"
 import { useState } from "react"
+import {useNavbarStore, useUserStore} from "../../store/store";
 
 const Login = ({ isActive, setIsActive }) => {
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    console.log(username, password)
+  const login = useUserStore((state) => state.login)
+  const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
+  const handleLogin = (e) => {
+    login(email, password)
+        .then(()=>setEmail(''))
+        .then(()=>setPassword(''))
+        .then(()=>setIsActive(false))
   }
+
+  const handleSwitch = () => {
+    setIsSignupOpen(true)
+    setIsActive(false)
+  }
+
   return (
     <>
       <div className={isActive ? "modal is-active" : "modal"}>
@@ -23,16 +32,15 @@ const Login = ({ isActive, setIsActive }) => {
             ></button>
           </header>
           <section className="modal-card-body">
-            <form onSubmit={handleFormSubmit}>
               <div className="field">
-                <label className="label is-size-5">Username</label>
+                <label className="label is-size-5">Email</label>
                 <div className="control">
                   <input
                     className="input"
                     type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   ></input>
                 </div>
               </div>
@@ -51,12 +59,12 @@ const Login = ({ isActive, setIsActive }) => {
               <div className="field">
                 <p>
                   Don't have an account?
-                  <Link>Sign up</Link>
+                  <button className="button is-text" style={{color:"#2565AE"}} onClick={handleSwitch}>Sign up</button>
                 </p>
               </div>
               <div className="field is-grouped">
                 <p className="control">
-                  <button className="button is-link">Submit</button>
+                  <button onClick={handleLogin} className="button is-link">Submit</button>
                 </p>
                 <p className="control">
                   <button
@@ -67,7 +75,6 @@ const Login = ({ isActive, setIsActive }) => {
                   </button>
                 </p>
               </div>
-            </form>
           </section>
         </div>
       </div>

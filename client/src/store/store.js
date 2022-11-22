@@ -12,7 +12,7 @@ export const useNavbarStore = create((set) => ({
 }))
 
 export const useUserStore = create((set) => ({
-    user: {name:"Mares"},
+    user: {},
     isAuth: false,
     setUser: (value) => set(() => ({ user: value })),
     login: async (email, password) => {
@@ -29,10 +29,9 @@ export const useUserStore = create((set) => ({
     registration: async (email, password,username) => {
         try {
             const response = await AuthService.registration(email,password,username)
-            console.log(response)
             localStorage.setItem('token',response.data.accessToken)
             set(() => ({isAuth: true}))
-            this.setUser(response.data.user)
+            set(() => ({ user: response.data.user }))
         }catch (err){
             console.log(err.response?.data?.message)
         }
@@ -43,7 +42,7 @@ export const useUserStore = create((set) => ({
             console.log(response)
             localStorage.removeItem('token')
             set(() => ({isAuth: false}))
-            this.setUser({})
+            set(() => ({}))
         } catch (err) {
             console.log(err.response?.data?.message)
         }
@@ -53,7 +52,7 @@ export const useUserStore = create((set) => ({
             const response = await axios.get(`${API_URL}/refresh`,{withCredentials:true})
             localStorage.setItem('token',response.data.accessToken)
             set(() => ({isAuth: true}))
-            this.setUser(response.data.user)
+            set(() => ({ user: response.data.user }))
         }catch (err){
             console.log(err.response?.data?.message)
         }
