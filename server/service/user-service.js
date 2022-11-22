@@ -6,15 +6,15 @@ const tokenService = require('./token-service')
 const UserDto = require('../dto/user-dto')
 const ApiError = require('../exceptions/api-error')
 
-exports.registration = async (email,password)=>{
-    const candidate = await User.findOne({email})
+exports.registration = async (email,password,username)=>{
+    const candidate = await User.findOne({email,username})
     if(candidate){
-        throw ApiError.BadRequest(`user email ${email}  is already registered`)
+        throw ApiError.BadRequest(`user email ${email} or ${username}  is already registered`)
     }
     const hashPassword = await bcrypt.hash(password,3)
     const activationLink = uuid.v4(); //random key
 
-    const user = await User.create({email,password:hashPassword,activationLink})
+    const user = await User.create({email,password:hashPassword,username,activationLink})
     await mailService.sendActivationMail(email,`${process.env.API_URL}/user/activate/${activationLink}`);
 
     const userDto = new UserDto(user);
