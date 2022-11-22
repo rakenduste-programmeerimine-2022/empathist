@@ -9,7 +9,7 @@ const ApiError = require('../exceptions/api-error')
 exports.registration = async (email,password,username)=>{
     const candidate = await User.findOne({email,username})
     if(candidate){
-        throw ApiError.BadRequest(`user email ${email} or ${username}  is already registered`)
+        throw ApiError.BadRequest(`user with such email: ${email} or username: ${username}  is already registered`)
     }
     const hashPassword = await bcrypt.hash(password,3)
     const activationLink = uuid.v4(); //random key
