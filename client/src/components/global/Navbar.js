@@ -21,17 +21,19 @@ const Navbar = () => {
   const [navMenu, setNavMenu] = useState("")
   const isAuth = useUserStore((state) => state.isAuth)
   const logout = useUserStore((state) => state.logout)
-  const [signupModal, setSignupModal] = useState(false)
-  const [loginModal, setLoginModal] = useState(false)
+  const setIsLoginOpen = useNavbarStore((state) => state.setIsLoginOpen)
+  const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
+  const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
+  const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
 
   const handleLoginClick = () => {
-    setLoginModal(true)
+    setIsLoginOpen(true)
     setNavMenu("")
     setNavToggle("")
   }
 
   const handleSignupClick = () => {
-    setSignupModal(true)
+    setIsSignupOpen(true)
     setNavMenu("")
     setNavToggle("")
   }
@@ -122,8 +124,8 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <Signup isActive={signupModal} setIsActive={setSignupModal} />
-      <Login isActive={loginModal} setIsActive={setLoginModal} />
+      <Signup isActive={isSignupOpen} setIsActive={setIsSignupOpen}/>
+      <Login isActive={isLoginOpen} setIsActive={setIsLoginOpen}/>
     </>
   )
 }
