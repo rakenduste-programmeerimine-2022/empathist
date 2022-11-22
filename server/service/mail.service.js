@@ -18,7 +18,7 @@ class MailService{
             from: process.env.SMTP_USER,
             to,
             subject:"account activation on "+process.env.API_URL,
-            text:'',
+            text:'Very nice',
             html:
                 `
                     <div>

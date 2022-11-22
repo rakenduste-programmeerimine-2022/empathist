@@ -8,8 +8,8 @@ exports.registration= async (req,res,next)=>{
         if (!errors.isEmpty()){
             return next(ApiError.BadRequest('Validation Error',errors.array()))
         }
-        const{email,password}=req.body
-        const userData = await userService.registration(email,password)
+        const{email,password,username}=req.body
+        const userData = await userService.registration(email,password,username)
         res.cookie('refreshToken',userData.refreshToken,{maxAge:30*24*60*60*1000,httpOnly:true})
         return res.json(userData)
     }
