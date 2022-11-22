@@ -10,11 +10,10 @@ import {
   faMagnifyingGlass,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons"
-const pages = [
-  { name: "Welcome", path: "/", icon: faHome },
-  { name: "Find chat", path: "/findchat", icon: faMagnifyingGlass },
-  { name: "Chat", path: "/chat", icon: faMessage },
-]
+
+const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
+const chat = { name: "Chat", path: "/chat", icon: faMessage }
+const welcome = { name: "Welcome", path: "/", icon: faHome }
 
 const Navbar = () => {
   const [navToggle, setNavToggle] = useState("")
@@ -72,21 +71,33 @@ const Navbar = () => {
           className={`navbar-menu is-size-4 has-background-dark ${navMenu}`}
         >
           <div className="navbar-start">
-            {pages.map((page) => (
               <Link
-                key={page.name}
+                key={welcome.name}
                 id="navItem"
                 className="navbar-item has-text-light is-size-4 px-5"
-                to={page.path}
+                to={welcome.path}
               >
                 <span className="icon-text">
                   <span className="icon pr-2">
-                    <FontAwesomeIcon icon={page.icon} />
+                    <FontAwesomeIcon icon={welcome.icon} />
                   </span>
-                  <span>{page.name}</span>
+                  <span>{welcome.name}</span>
                 </span>
               </Link>
-            ))}
+              <Link
+                  key={user.roomID?chat.name:findChat.name}
+                  id="navItem"
+                  className="navbar-item has-text-light is-size-4 px-5"
+                  to={chat.path}
+              >
+              <span className="icon-text">
+                <span className="icon pr-2">
+                  <FontAwesomeIcon icon={user.roomID?chat.icon:findChat.icon} />
+                </span>
+                <span>{user.roomID?chat.name:findChat.name}</span>
+              </span>
+              </Link>
+
           </div>
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable mr-3">
