@@ -3,10 +3,7 @@ import "bulma/css/bulma.css"
 import { Route, Routes } from "react-router-dom"
 import NotFound from "./components/global/NotFound"
 import Welcome from "./pages/welcome/Welcome"
-import FindChat from "./pages/chat/FindChat"
 import Chat from "./pages/chat/Chat"
-import Login from "./components/global/Login"
-import Signup from "./components/global/Signup"
 import Navbar from "./components/global/Navbar"
 import {useUserStore} from "./store/store";
 import {useEffect} from "react";
@@ -27,8 +24,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
