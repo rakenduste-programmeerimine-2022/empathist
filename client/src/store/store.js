@@ -5,13 +5,12 @@ export const useNavbarStore = create((set) => ({
     isSignupOpen: false,
     loginButtonClicks: 0,
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
-    setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
-    incrementLoginButtonClicks: () => set((state) => ({ loginButtonClicks: state.loginButtonClicks + 1 })),
+    setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value }))
 }))
 
 export const useUserStore = create((set) => ({
     user: {name:"Mares"},
-    isAuth: true,
+    isAuth: false,
     setUser: (value) => set(() => ({ user: value })),
     logout: () => set(() => ({ user: {}, isAuth: false })),
 }))
