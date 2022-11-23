@@ -9,7 +9,6 @@ const searchOptions = [{ name: "By name" }]
 const FindChat = ({rooms}) => {
   const [searchRequest, setSearchRequest] = useState("")
   const enterRoom = useUserStore((state) => state.enterRoom)
-  console.log(searchRequest)
 
 
   return (
