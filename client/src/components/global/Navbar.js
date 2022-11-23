@@ -21,8 +21,6 @@ const Navbar = () => {
   const isAuth = useUserStore((state) => state.isAuth)
   const logout = useUserStore((state) => state.logout)
   const user = useUserStore((state) => state.user)
-  const setUser = useUserStore((state) => state.setUser)
-  const socket = useUserStore((state) => state.socket)
   const setIsLoginOpen = useNavbarStore((state) => state.setIsLoginOpen)
   const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
   const setISFindChatOpen = useNavbarStore((state) => state.setIsFindChatOpen)
@@ -45,18 +43,6 @@ const Navbar = () => {
   const handleNavToggle = () => {
     navToggle === "" ? setNavToggle("is-active") : setNavToggle("")
     navMenu === "" ? setNavMenu("is-active") : setNavMenu("")
-  }
-
-  const exitRoom = () => {
-      if (user.roomID){
-        console.log(`Trying to exit room ${user.roomID}`)
-        setUser({roomID: null})
-        socket.send(JSON.stringify({event: "exit", roomID: user.roomID}))
-
-    }
-    else {
-      console.log("You have not entered any room")
-    }
   }
 
   return (
