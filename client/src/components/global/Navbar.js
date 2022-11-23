@@ -27,6 +27,7 @@ const Navbar = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
   const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
+  const roomID = useUserStore((state) => state.roomID)
 
   const handleLoginClick = () => {
     setIsLoginOpen(true)
@@ -87,7 +88,7 @@ const Navbar = () => {
                 </span>
               </Link>
               <Link
-                  key={user.roomID?chat.name:findChat.name}
+                  key={roomID?chat.name:findChat.name}
                   id="navItem"
                   className="navbar-item has-text-light is-size-4 px-5"
                   to={chat.path}
@@ -95,12 +96,12 @@ const Navbar = () => {
               >
               <span className="icon-text">
                 <span className="icon pr-2">
-                  <FontAwesomeIcon icon={user.roomID?chat.icon:findChat.icon} />
+                  <FontAwesomeIcon icon={roomID?chat.icon:findChat.icon} />
                 </span>
-                <span>{user.roomID?chat.name:findChat.name}</span>
+                <span>{roomID?chat.name:findChat.name}</span>
               </span>
               </Link>
-            {user.roomID&&<Link
+            {roomID&&<Link
                 onClick={isFindChatOpen?()=>setISFindChatOpen(false):()=>setISFindChatOpen(true)}
                 className=" navbar-item is-link has-text-light is-size-4 px-5">
               <span className="icon-text">
