@@ -6,15 +6,18 @@ const defaultMessages = [
   {
     username: "firstUser",
     content: "Lorem ipsum dolor sit amet, ",
+    sendedAt: "2021-05-01T12:00:00.000Z",
   },
   {
     username: "secondUser",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+    sendedAt: "2021-05-01T12:00:12.000Z",
   },
   {
     username: "thirdUser",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    sendedAt: "2021-05-01T12:00:24.000Z",
   },
 ]
 
@@ -27,26 +30,29 @@ const Chat = () => {
   }
   const user = useUserStore((state) => state.user)
   const setSocket = useUserStore((state) => state.setSocket)
-  const setUser = useUserStore((state) => state.setUser)
+  const setRoomID = useUserStore((state) => state.setRoomID)
+  const roomID = useUserStore((state) => state.roomID)
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const socket = useUserStore((state) => state.socket)
   const enterRoom = useUserStore((state) => state.enterRoom)
 
   useEffect(() => {
-    if (user.id || user.username) {
+    if (user.id && user.username) {
       const newSocket = new WebSocket('ws://localhost:2500/chat');
       setSocket(newSocket)
       newSocket.onopen = (event) => {
-        if (user.id || user.username) {
-          console.log(`Trying to connect as ${user.username}`)
-          socket.send(JSON.stringify( {
-            id: user.id,
-            username: user.username,
-            event: "connect"
-          }))
-        } else {
-          console.log("Log in to connect to chat")
-          //Here we can redirect to login/set name page
+        if (user.id && user.username) {
+          if (socket){
+            console.log(`Trying to connect as ${user.username}`)
+            socket.send(JSON.stringify( {
+              id: user.id,
+              username: user.username,
+              event: "connect"
+            }))
+          } else {
+            console.log("Log in to connect to chat")
+            //Here we can redirect to login/set name page
+          }
         }
       }
     }
@@ -71,11 +77,12 @@ const Chat = () => {
       }
       if (message.event === "entered") {
         console.log(message.content)
-        setUser({...user,roomID:message.roomID})
+        setRoomID(message.roomID)
+
       }
       if (message.event === "exited") {
         console.log(message.content)
-        user.roomID = null
+        setRoomID(null)
         setRooms(message.rooms)
       }
       if (message.event === "roomCreated") {
@@ -104,7 +111,7 @@ const Chat = () => {
   // }
 
 
-  if (user.roomID) {
+  if (roomID) {
     return (
         <div>
           <div className="container is-fluid">
@@ -127,7 +134,7 @@ const Chat = () => {
                       {messages.map((message) => (
                           <article
                               className={`message ${message.username===user.username?"right":"left"} is-primary`}
-                              key={message.sendedAt}
+                              key={new Date(message.sendedAt).getTime()}
                           >
                             <div className="message-header p-2">
                               {message.username}

@@ -31,7 +31,7 @@ const FindChat = ({rooms}) => {
               <div className="dropdown-menu" id="dropdown-menu" role="menu">
                 <div className="dropdown-content">
                   {searchOptions.map((option) => (
-                    <Link className="dropdown-item">{option.name}</Link>
+                    <Link key = {option.name} className="dropdown-item">{option.name}</Link>
                   ))}
                 </div>
               </div>
@@ -51,12 +51,12 @@ const FindChat = ({rooms}) => {
       </section>
       <section className="hero-body p-2 mt-3 chat-list">
         {rooms.map((room) => (
-          <div key={room.id} className="notification chat-item">
-            <p className="is-size-3 has-text-weight-medium">
+          <ul key={room.id} className="notification chat-item">
+            <li className="is-size-3 has-text-weight-medium">
               {room.name} | {room.users} {room.users === 1 ? "user" : "users"} | {room.type} room
-            </p>
+            </li>
             <div className="button is-info px-5 is-size-5" onClick={()=>enterRoom(room.id)}>Join</div>
-          </div>
+          </ul>
         ))}
       </section>
     </>

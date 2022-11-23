@@ -17,6 +17,8 @@ export const useUserStore = create((set,get) => ({
     user: {},
     socket: null,
     isAuth: false,
+    roomID: null,
+    setRoomID: (value) => set(() => ({ roomID: value })),
     setSocket : (socket) => set(() => ({ socket: socket })),
     setUser: (user) => set(() => ({ user: user })),
     login: async (email, password) => {
