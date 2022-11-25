@@ -25,6 +25,7 @@ const Chat = () => {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState(defaultMessages)
   const [rooms, setRooms] = useState([])
+  const setIsEnterNameOpen = useNavbarStore((state) => state.setIsEnterNameOpen)
   const handleMessageSubmit = (e) => {
     console.log(message)
   }
@@ -37,71 +38,70 @@ const Chat = () => {
   const enterRoom = useUserStore((state) => state.enterRoom)
 
   useEffect(() => {
-    if (user.id && user.username) {
-      const newSocket = new WebSocket('ws://localhost:2500/chat');
-      setSocket(newSocket)
-      newSocket.onopen = (event) => {
+      const socket = new WebSocket('ws://localhost:2500/chat');
+      setSocket(socket)
+      socket.onopen = (event) => {
         if (user.id && user.username) {
-          if (socket){
             console.log(`Trying to connect as ${user.username}`)
             socket.send(JSON.stringify( {
               id: user.id,
               username: user.username,
               event: "connect"
             }))
+
           } else {
             console.log("Log in to connect to chat")
+            setIsEnterNameOpen(true)
             //Here we can redirect to login/set name page
           }
         }
+    if (socket){
+      socket.onmessage = (event) => {
+        let message = JSON.parse(event.data)
+        console.log(`event: ${message.event}`)
+        if (message.event === "chatUpdate") {
+          setMessages(message.messages)
+          setRooms(message.rooms)
+        }
+        if (message.event === "connected") {
+          console.log(message.content)
+          setRooms(message.rooms)
+          console.log(`Connected as ${user.username}`)
+        }
+        if (message.event === "error") {
+          console.log(`error: ${message.content}`)
+        }
+        if (message.event === "entered") {
+          console.log(message.content)
+          setRoomID(message.roomID)
+
+        }
+        if (message.event === "exited") {
+          console.log(message.content)
+          setRoomID(null)
+          setRooms(message.rooms)
+        }
+        if (message.event === "roomCreated") {
+          console.log(message.content)
+          enterRoom(message.createdRoomId)
+        }
+        if (message.event === "roomDeleted") {
+          console.log(message.content)
+          setRooms(message.rooms)
+        }
+        if (message.event === "roomUpdated") {
+          console.log(message.content)
+          setRooms(message.rooms)
+        }
+        if (message.event === "updateCanvas") {
+          //drawHandler(message.x, message.y, message.color)
+        }
       }
     }
+    return () => socket.close()
     // eslint-disable-next-line
   }, [user.id, user.username])
 
-  if (socket){
-    socket.onmessage = (event) => {
-      let message = JSON.parse(event.data)
-      console.log(`event: ${message.event}`)
-      if (message.event === "chatUpdate") {
-        setMessages(message.messages)
-        setRooms(message.rooms)
-      }
-      if (message.event === "connected") {
-        console.log(message.content)
-        setRooms(message.rooms)
-        console.log(`Connected as ${user.username}`)
-      }
-      if (message.event === "error") {
-        console.log(`error: ${message.content}`)
-      }
-      if (message.event === "entered") {
-        console.log(message.content)
-        setRoomID(message.roomID)
-
-      }
-      if (message.event === "exited") {
-        console.log(message.content)
-        setRoomID(null)
-        setRooms(message.rooms)
-      }
-      if (message.event === "roomCreated") {
-        console.log(message.content)
-        enterRoom(message.createdRoomId)
-      }
-      if (message.event === "roomDeleted") {
-        console.log(message.content)
-        setRooms(message.rooms)
-      }
-      if (message.event === "roomUpdated") {
-        console.log(message.content)
-        setRooms(message.rooms)
-      }
-      if (message.event === "updateCanvas") {
-        //drawHandler(message.x, message.y, message.color)
-      }
-    }
-  }
 
   // const drawHandler = (x, y, color) => {
   //   ctx.beginPath();
