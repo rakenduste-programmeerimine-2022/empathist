@@ -10,6 +10,7 @@ import {useEffect} from "react";
 
 function App() {
 
+    const setSocket = useUserStore((state) => state.setSocket)
     const checkAuth = useUserStore((state) => state.checkAuth)
     useEffect(()=>{
         if (localStorage.getItem( ('token'))){
@@ -17,6 +18,8 @@ function App() {
         }
         // eslint-disable-next-line
     },[])
+
+
 
   return (
     <div className="App">

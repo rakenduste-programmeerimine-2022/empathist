@@ -10,6 +10,7 @@ import {
   faMagnifyingGlass,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons"
+import {EnterName} from "./EnterName";
 
 const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
@@ -152,6 +153,7 @@ const Navbar = () => {
       </nav>
       <Signup isActive={isSignupOpen} setIsActive={setIsSignupOpen}/>
       <Login isActive={isLoginOpen} setIsActive={setIsLoginOpen}/>
+      <EnterName/>
     </>
   )
 }
