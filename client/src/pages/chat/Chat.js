@@ -26,15 +26,19 @@ const Chat = () => {
   const [messages, setMessages] = useState(defaultMessages)
   const [rooms, setRooms] = useState([])
   const setIsEnterNameOpen = useNavbarStore((state) => state.setIsEnterNameOpen)
-  const handleMessageSubmit = (e) => {
-    console.log(message)
+  const sendMessage = useUserStore((state) => state.sendMessage)
+  const handleMessageSubmit = () => {
+      if (message.length) {
+          sendMessage(message)
+          setMessage('')
+      }
+
   }
   const user = useUserStore((state) => state.user)
   const setSocket = useUserStore((state) => state.setSocket)
   const setRoomID = useUserStore((state) => state.setRoomID)
   const roomID = useUserStore((state) => state.roomID)
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
-  const socket = useUserStore((state) => state.socket)
   const enterRoom = useUserStore((state) => state.enterRoom)
 
   useEffect(() => {
@@ -153,7 +157,7 @@ const Chat = () => {
                   ></textarea>
                       <button
                           className="button is-info mt-3"
-                          onClick={(e) => handleMessageSubmit(e)}
+                          onClick={handleMessageSubmit}
                       >
                         Send
                       </button>
