@@ -7,9 +7,11 @@ export const useNavbarStore = create((set) => ({
     isLoginOpen: false,
     isSignupOpen: false,
     isFindChatOpen: false,
+    isEnterNameOpen: false,
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
     setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
     setIsFindChatOpen: (value) => set(() => ({ isFindChatOpen: value })),
+    setIsEnterNameOpen: (value) => set(() => ({ isEnterNameOpen: value })),
 
 }))
 
@@ -65,5 +67,13 @@ export const useUserStore = create((set,get) => ({
     enterRoom: (roomID) => {
         console.log(`Trying to enter room ${roomID}`)
         get().socket.send(JSON.stringify({event: "enter", roomID}))
+    },
+    exitRoom: () => {
+        console.log(`Trying to exit room ${get().roomID}`)
+        get().socket.send(JSON.stringify({event: "exit"}))
+    },
+    sendMessage: (message) => {
+        console.log(`Trying to send message ${message}`)
+        get().socket.send(JSON.stringify({event: "message", content:message}))
     }
 }))

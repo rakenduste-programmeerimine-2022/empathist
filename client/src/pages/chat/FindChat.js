@@ -9,6 +9,15 @@ const searchOptions = [{ name: "By name" }]
 const FindChat = ({rooms}) => {
   const [searchRequest, setSearchRequest] = useState("")
   const enterRoom = useUserStore((state) => state.enterRoom)
+  const exitRoom = useUserStore((state) => state.exitRoom)
+  const storedRoomID = useUserStore((state) => state.roomID)
+
+  const handleEnterRoom = (roomID) => {
+    if (roomID !== storedRoomID) {
+      exitRoom()
+      enterRoom(roomID)
+    }
+  }
 
 
   return (
@@ -50,12 +59,12 @@ const FindChat = ({rooms}) => {
         </div>
       </section>
       <section className="hero-body p-2 mt-3 chat-list">
-        {rooms.map((room) => (
+        {rooms.filter(room=>room.id!==storedRoomID).map((room) => (
           <ul key={room.id} className="notification chat-item">
             <li className="is-size-3 has-text-weight-medium">
               {room.name} | {room.users} {room.users === 1 ? "user" : "users"} | {room.type} room
             </li>
-            <div className="button is-info px-5 is-size-5" onClick={()=>enterRoom(room.id)}>Join</div>
+            <div className="button is-info px-5 is-size-5" onClick={()=>handleEnterRoom(room.id)}>Join</div>
           </ul>
         ))}
       </section>
