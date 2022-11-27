@@ -1,6 +1,6 @@
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 import FindChat from "./FindChat"
-import {useNavbarStore, useUserStore} from "../../store/store"
+import { useNavbarStore, useUserStore } from "../../store/store"
 
 const defaultMessages = [
   {
@@ -28,11 +28,10 @@ const Chat = () => {
   const setIsEnterNameOpen = useNavbarStore((state) => state.setIsEnterNameOpen)
   const sendMessage = useUserStore((state) => state.sendMessage)
   const handleMessageSubmit = () => {
-      if (message.length) {
-          sendMessage(message)
-          setMessage('')
-      }
-
+    if (message.length) {
+      sendMessage(message)
+      setMessage("")
+    }
   }
   const user = useUserStore((state) => state.user)
   const setSocket = useUserStore((state) => state.setSocket)
@@ -42,24 +41,25 @@ const Chat = () => {
   const enterRoom = useUserStore((state) => state.enterRoom)
 
   useEffect(() => {
-      const socket = new WebSocket('ws://localhost:2500/chat');
-      setSocket(socket)
-      socket.onopen = (event) => {
-        if (user.id && user.username) {
-            console.log(`Trying to connect as ${user.username}`)
-            socket.send(JSON.stringify( {
-              id: user.id,
-              username: user.username,
-              event: "connect"
-            }))
-
-          } else {
-            console.log("Log in to connect to chat")
-            setIsEnterNameOpen(true)
-            //Here we can redirect to login/set name page
-          }
-        }
-    if (socket){
+    const socket = new WebSocket("ws://localhost:2500/chat")
+    setSocket(socket)
+    socket.onopen = (event) => {
+      if (user.id && user.username) {
+        console.log(`Trying to connect as ${user.username}`)
+        socket.send(
+          JSON.stringify({
+            id: user.id,
+            username: user.username,
+            event: "connect",
+          })
+        )
+      } else {
+        console.log("Log in to connect to chat")
+        setIsEnterNameOpen(true)
+        //Here we can redirect to login/set name page
+      }
+    }
+    if (socket) {
       socket.onmessage = (event) => {
         let message = JSON.parse(event.data)
         console.log(`event: ${message.event}`)
@@ -78,7 +78,6 @@ const Chat = () => {
         if (message.event === "entered") {
           console.log(message.content)
           setRoomID(message.roomID)
-
         }
         if (message.event === "exited") {
           console.log(message.content)
@@ -106,7 +105,6 @@ const Chat = () => {
     // eslint-disable-next-line
   }, [user.id, user.username])
 
-
   // const drawHandler = (x, y, color) => {
   //   ctx.beginPath();
   //   ctx.arc(x, y, 2, 0, 2 * Math.PI);
@@ -114,65 +112,71 @@ const Chat = () => {
   //   ctx.fill();
   // }
 
-
   if (roomID) {
     return (
-        <div>
-          <div className="container is-fluid">
-            <div className="title pt-5">Chat page</div>
-            <div className="columns pt-3">
-              <div className="column is-half">
-                <div className="box">
-                  <section className="hero is-halfheight">
-                    {isFindChatOpen ?<FindChat rooms={rooms} />:<Canvas/>}
-                  </section>
-                </div>
+      <div>
+        <div className="container is-fluid">
+          <div className="title pt-5">Chat page</div>
+          <div className="columns pt-3">
+            <div className="column is-half">
+              <div className="box">
+                <section className="hero is-halfheight">
+                  {isFindChatOpen ? <FindChat rooms={rooms} /> : <Canvas />}
+                </section>
               </div>
-              <div className="column is-half">
-                <div className="box chat-box">
-                  <section className="hero is-halfheight">
-                    <section className="hero-head">
-                      <div className="title">Chat</div>
-                    </section>
-                    <section className="hero-body p-2 chat mt-3">
-                      {messages.map((message) => (
-                          <article
-                              className={`message ${message.username===user.username?"right":"left"} is-primary`}
-                              key={new Date(message.sendedAt).getTime()}
-                          >
-                            <div className="message-header p-2">
-                              {message.username}
-                            </div>
-                            <div className="message-body  p-2">{message.content}</div>
-                          </article>
-                      ))}
-                    </section>
-                    <section className="input-field mt-4">
-                  <textarea
+            </div>
+            <div className="column is-half">
+              <div className="box chat-box">
+                <section className="hero is-halfheight">
+                  <section className="hero-head">
+                    <div className="title">Chat</div>
+                  </section>
+                  <section className="hero-body p-2 chat mt-3">
+                    {messages.map((message) => (
+                      <article
+                        className={`message ${
+                          message.username === user.username ? "right" : "left"
+                        } is-primary`}
+                        key={new Date(message.sendedAt).getTime()}
+                      >
+                        <div className="message-header p-2">
+                          {message.username}
+                        </div>
+                        <div className="message-body  p-2">
+                          {message.content}
+                        </div>
+                        <span className="time m-1">
+                          {new Date(message.sendedAt).toLocaleTimeString(
+                            "en-GB"
+                          )}
+                        </span>
+                      </article>
+                    ))}
+                  </section>
+                  <section className="input-field mt-4">
+                    <textarea
                       className="textarea has-fixed-size"
                       placeholder="Type your message here..."
                       rows="2"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                  ></textarea>
-                      <button
-                          className="button is-info mt-3"
-                          onClick={handleMessageSubmit}
-                      >
-                        Send
-                      </button>
-                    </section>
+                    ></textarea>
+                    <button
+                      className="button is-info mt-3"
+                      onClick={handleMessageSubmit}
+                    >
+                      Send
+                    </button>
                   </section>
-                </div>
+                </section>
               </div>
             </div>
           </div>
         </div>
+      </div>
     )
   }
-    return (
-        <FindChat rooms={rooms}/>
-    )
+  return <FindChat rooms={rooms} />
 }
 export default Chat
 
