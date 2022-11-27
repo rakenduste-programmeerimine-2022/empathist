@@ -72,3 +72,9 @@
   justify-content: space-between;
   align-items: center;
 }
+
+
+.time{
+  font-size: 0.9rem;
+  float: right;
+}
