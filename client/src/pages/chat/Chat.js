@@ -86,6 +86,10 @@ const Chat = () => {
       }
       if (message.event === "error") {
         console.log(`error: ${message.content}`)
+        if (message.type === "connectionError") {
+          setIsEnterNameOpen(true)
+        }
+        setGlobalNotification(message.content)
       }
       if (message.event === "entered") {
         console.log(message.content)

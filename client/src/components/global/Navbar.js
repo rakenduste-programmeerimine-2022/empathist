@@ -35,12 +35,12 @@ const Navbar = () => {
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
   const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
 
-  const handleWelcomeClick = () => {
+  const handleWelcomeClick = async () => {
     console.log("Going to welcome page")
-    exitRoom()
-    window.location.replace(welcome.path);
+    await exitRoom()
     setGlobalNotification("You have left the chat")
     setIsNotificationOpen(true)
+    window.location.replace(welcome.path);
 
 
   }

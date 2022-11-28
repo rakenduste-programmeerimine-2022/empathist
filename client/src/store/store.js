@@ -78,12 +78,12 @@ export const useUserStore = create((set,get) => ({
         console.log(`Trying to enter room ${roomID}`)
         get().socket.send(JSON.stringify({event: "enter", roomID}))
     },
-    exitRoom: () => {
+    exitRoom: async () => {
         console.log(`Trying to exit room ${get().roomID}`)
-        get().socket.send(JSON.stringify({event: "exit"}))
+        await get().socket.send(JSON.stringify({event: "exit"}))
     },
-    sendMessage: (message) => {
+    sendMessage:(message) => {
         console.log(`Trying to send message ${message}`)
-        get().socket.send(JSON.stringify({event: "message", content:message}))
+        get().socket.send(JSON.stringify({event: "message", content: message}))
     }
 }))

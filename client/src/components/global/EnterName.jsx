@@ -14,6 +14,8 @@ export const EnterName = () => {
         if(username.length){
             setUser({username});
             setIsEnterNameOpen(false);
+            setInputError(true);
+            setUsername('');
         }
         else{
             alert("Input is empty");
