@@ -8,10 +8,18 @@ export const useNavbarStore = create((set) => ({
     isSignupOpen: false,
     isFindChatOpen: false,
     isEnterNameOpen: false,
+    isErrorModalOpen: false,
+    isNotificationOpen: false,
+    globalNotification: '',
+    globalError: '',
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
     setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
     setIsFindChatOpen: (value) => set(() => ({ isFindChatOpen: value })),
     setIsEnterNameOpen: (value) => set(() => ({ isEnterNameOpen: value })),
+    setIsErrorModalOpen: (value) => set(() => ({ isErrorModalOpen: value })),
+    setGlobalError: (value) => set(() => ({ globalError: value })),
+    setIsNotificationOpen: (value) => set(() => ({ isNotificationOpen: value })),
+    setGlobalNotification: (value) => set(() => ({ globalNotification: value })),
 
 }))
 
@@ -49,7 +57,8 @@ export const useUserStore = create((set,get) => ({
             console.log(response)
             localStorage.removeItem('token')
             set(() => ({isAuth: false}))
-            set(() => ({}))
+            set(() => ({roomID: null}))
+            set(() => ({user: {}}))
         } catch (err) {
             console.log(err.response?.data?.message)
         }

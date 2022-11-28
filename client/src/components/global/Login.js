@@ -38,7 +38,7 @@ const Login = ({ isActive, setIsActive }) => {
                   <input
                     className="input"
                     type="text"
-                    placeholder="email address"
+                    placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   ></input>
