@@ -25,6 +25,7 @@ const Chat = () => {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState(defaultMessages)
   const [rooms, setRooms] = useState([])
+  const [roomName, setRoomName] = useState("")
   const setIsEnterNameOpen = useNavbarStore((state) => state.setIsEnterNameOpen)
   const sendMessage = useUserStore((state) => state.sendMessage)
   const handleMessageSubmit = () => {
@@ -40,12 +41,9 @@ const Chat = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const enterRoom = useUserStore((state) => state.enterRoom)
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
-  const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
 
 
   useEffect(() => {
-      setIsNotificationOpen(false)
-      setGlobalNotification('')
       const socket = new WebSocket("ws://localhost:2500/chat")
       setSocket(socket)
       socket.onopen = (event) => {
@@ -84,12 +82,14 @@ const Chat = () => {
         console.log(message.content)
         setRooms(message.rooms)
         console.log(`Connected as ${user.username}`)
+        setGlobalNotification("Connected to chat service")
       }
       if (message.event === "error") {
         console.log(`error: ${message.content}`)
       }
       if (message.event === "entered") {
         console.log(message.content)
+        setRoomName(message.roomName)
         setRoomID(message.roomID)
       }
       if (message.event === "exited") {
@@ -114,13 +114,12 @@ const Chat = () => {
       }
     }
     socket.onclose = (event) => {
-        setGlobalNotification("Disconnected from chat service")
-        setIsNotificationOpen(true)
+        setGlobalNotification("Could not connect to chat service")
+        console.log("Disconnected from chat service")
     }
     return () => socket.close()
     // eslint-disable-next-line
   }, [user])
-
   // const drawHandler = (x, y, color) => {
   //   ctx.beginPath();
   //   ctx.arc(x, y, 2, 0, 2 * Math.PI);
@@ -145,7 +144,7 @@ const Chat = () => {
               <div className="box chat-box">
                 <section className="hero is-halfheight">
                   <section className="hero-head">
-                    <div className="title">Chat</div>
+                    <div className="title">{roomName.length?roomName:"Chat"}</div>
                   </section>
                   <section className="hero-body p-2 chat mt-3">
                     {messages.map((message) => (
