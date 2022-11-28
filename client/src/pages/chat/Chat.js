@@ -56,6 +56,7 @@ const Chat = () => {
                 event: "connect",
               })
           )
+
         }
         if (user.username && !user.id) {
             socket.send(
@@ -68,7 +69,7 @@ const Chat = () => {
         if (!user.username && !user.id) {
           console.log("Log in to connect to chat")
           setIsEnterNameOpen(true)
-        }
+        
       }
 
     socket.onmessage = (event) => {
@@ -87,7 +88,7 @@ const Chat = () => {
       if (message.event === "error") {
         console.log(`error: ${message.content}`)
         if (message.type === "connectionError") {
-          setIsEnterNameOpen(true)
+          setIsEnterNameOpen(true
         }
         setGlobalNotification(message.content)
       }
@@ -124,6 +125,7 @@ const Chat = () => {
     return () => socket.close()
     // eslint-disable-next-line
   }, [user])
+
   // const drawHandler = (x, y, color) => {
   //   ctx.beginPath();
   //   ctx.arc(x, y, 2, 0, 2 * Math.PI);
@@ -147,8 +149,8 @@ const Chat = () => {
             <div className="column is-half">
               <div className="box chat-box">
                 <section className="hero is-halfheight">
-                  <section className="hero-head">
-                    <div className="title">{roomName.length?roomName:"Chat"}</div>
+                  <section className="hero-head"
+                    <div className="title">{roomName.length?roomName:"Chat"}</div
                   </section>
                   <section className="hero-body p-2 chat mt-3">
                     {messages.map((message) => (
