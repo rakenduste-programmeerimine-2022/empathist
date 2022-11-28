@@ -10,7 +10,7 @@ export const useNavbarStore = create((set) => ({
     isEnterNameOpen: false,
     isErrorModalOpen: false,
     isNotificationOpen: false,
-    globalNotification: '',
+    globalNotification: 'Welcome to our project',
     globalError: '',
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
     setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
@@ -31,6 +31,7 @@ export const useUserStore = create((set,get) => ({
     setRoomID: (value) => set(() => ({ roomID: value })),
     setSocket : (socket) => set(() => ({ socket: socket })),
     setUser: (user) => set(() => ({ user: user })),
+    setIsAuth: (value) => set(() => ({ isAuth: value })),
     login: async (email, password) => {
         try {
             const response = await AuthService.login(email, password)
