@@ -1,14 +1,27 @@
 import {useState} from "react";
-import {useNavbarStore} from "../../store/store";
+import {useNavbarStore, useUserStore} from "../../store/store";
 
 export const EnterName = () => {
 
     const isEnterNameOpen = useNavbarStore(state => state.isEnterNameOpen);
     const setIsEnterNameOpen = useNavbarStore(state => state.setIsEnterNameOpen);
     const setIsLoginOpen = useNavbarStore(state => state.setIsLoginOpen);
-    const [name, setName] = useState('');
+    const setUser = useUserStore(state => state.setUser);
+    const [inputError,setInputError] = useState(false);
+    const [username, setUsername] = useState('');
     const handleEnterName = ()=>{
-
+        setInputError(false);
+        if(username.length){
+            setUser({username});
+            setIsEnterNameOpen(false);
+            setInputError(true);
+            setUsername('');
+        }
+        else{
+            alert("Input is empty");
+            setInputError(true);
+            //add error status to input
+        }
     }
     const handleSwitchToLogin = ()=>{
         setIsLoginOpen(true);
@@ -20,7 +33,7 @@ export const EnterName = () => {
             <div className="modal-background" onClick={()=>setIsEnterNameOpen(false)}></div>
             <div className="modal-card px-2">
                 <header className="modal-card-head">
-                    <p className="modal-card-title is-size-3">Enter your name</p>
+                    <p className="modal-card-title is-size-3">Log in as guest</p>
                     <button
                         className="delete"
                         aria-label="close"
@@ -29,14 +42,14 @@ export const EnterName = () => {
                 </header>
                 <section className="modal-card-body">
                     <div className="field">
-                        <label className="label is-size-5">Enter Name</label>
+                        <label className="label is-size-5">Choose a username to connect</label>
                         <div className="control">
                             <input
-                                className="input"
+                                className={inputError ? 'input is-danger' : 'input'}
                                 type="text"
                                 placeholder="Username"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                             ></input>
                         </div>
                     </div>

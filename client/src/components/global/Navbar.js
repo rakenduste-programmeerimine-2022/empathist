@@ -1,4 +1,4 @@
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Link } from "react-router-dom"
 import { useNavbarStore, useUserStore } from "../../store/store"
 import Signup from "./Signup"
@@ -11,6 +11,7 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons"
 import {EnterName} from "./EnterName";
+import {Notification} from "../errors/Notification";
 
 const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
@@ -29,6 +30,20 @@ const Navbar = () => {
   const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
   const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
   const roomID = useUserStore((state) => state.roomID)
+  const exitRoom = useUserStore((state) => state.exitRoom)
+  const globalNotification = useNavbarStore((state) => state.globalNotification)
+  const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
+  const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
+
+  const handleWelcomeClick = async () => {
+    console.log("Going to welcome page")
+    await exitRoom()
+    setGlobalNotification("You have left the chat")
+    setIsNotificationOpen(true)
+    window.location.replace(welcome.path);
+
+
+  }
 
   const handleLoginClick = () => {
     setIsLoginOpen(true)
@@ -46,6 +61,18 @@ const Navbar = () => {
     navToggle === "" ? setNavToggle("is-active") : setNavToggle("")
     navMenu === "" ? setNavMenu("is-active") : setNavMenu("")
   }
+
+  const handleLogout = async () => {
+    await logout()
+    setGlobalNotification("You have logged out")
+    setIsNotificationOpen(true)
+    window.location.replace(welcome.path);
+  }
+
+  useEffect(() => {
+    setIsNotificationOpen(true)
+    console.log("Notification is updated")
+  },[globalNotification])
 
   return (
     <>
@@ -79,7 +106,7 @@ const Navbar = () => {
                 key={welcome.name}
                 id="navItem"
                 className="navbar-item has-text-light is-size-4 px-5"
-                to={welcome.path}
+                onClick={handleWelcomeClick}
               >
                 <span className="icon-text">
                   <span className="icon pr-2">
@@ -128,7 +155,7 @@ const Navbar = () => {
                 {isAuth ? (
                   <button
                     className="navbar-item is-size-4 button is-ghost has-text-black"
-                    onClick={() => logout()}
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
@@ -154,6 +181,7 @@ const Navbar = () => {
       <Signup isActive={isSignupOpen} setIsActive={setIsSignupOpen}/>
       <Login isActive={isLoginOpen} setIsActive={setIsLoginOpen}/>
       <EnterName/>
+      <Notification/>
     </>
   )
 }

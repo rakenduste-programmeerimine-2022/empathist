@@ -8,10 +8,18 @@ export const useNavbarStore = create((set) => ({
     isSignupOpen: false,
     isFindChatOpen: false,
     isEnterNameOpen: false,
+    isErrorModalOpen: false,
+    isNotificationOpen: false,
+    globalNotification: 'Welcome to our project',
+    globalError: '',
     setIsLoginOpen: (value) => set(() => ({ isLoginOpen: value })),
     setIsSignupOpen: (value) => set(() => ({ isSignupOpen: value })),
     setIsFindChatOpen: (value) => set(() => ({ isFindChatOpen: value })),
     setIsEnterNameOpen: (value) => set(() => ({ isEnterNameOpen: value })),
+    setIsErrorModalOpen: (value) => set(() => ({ isErrorModalOpen: value })),
+    setGlobalError: (value) => set(() => ({ globalError: value })),
+    setIsNotificationOpen: (value) => set(() => ({ isNotificationOpen: value })),
+    setGlobalNotification: (value) => set(() => ({ globalNotification: value })),
 
 }))
 
@@ -23,6 +31,7 @@ export const useUserStore = create((set,get) => ({
     setRoomID: (value) => set(() => ({ roomID: value })),
     setSocket : (socket) => set(() => ({ socket: socket })),
     setUser: (user) => set(() => ({ user: user })),
+    setIsAuth: (value) => set(() => ({ isAuth: value })),
     login: async (email, password) => {
         try {
             const response = await AuthService.login(email, password)
@@ -49,7 +58,8 @@ export const useUserStore = create((set,get) => ({
             console.log(response)
             localStorage.removeItem('token')
             set(() => ({isAuth: false}))
-            set(() => ({}))
+            set(() => ({roomID: null}))
+            set(() => ({user: {}}))
         } catch (err) {
             console.log(err.response?.data?.message)
         }
@@ -68,12 +78,12 @@ export const useUserStore = create((set,get) => ({
         console.log(`Trying to enter room ${roomID}`)
         get().socket.send(JSON.stringify({event: "enter", roomID}))
     },
-    exitRoom: () => {
+    exitRoom: async () => {
         console.log(`Trying to exit room ${get().roomID}`)
-        get().socket.send(JSON.stringify({event: "exit"}))
+        await get().socket.send(JSON.stringify({event: "exit"}))
     },
-    sendMessage: (message) => {
+    sendMessage:(message) => {
         console.log(`Trying to send message ${message}`)
-        get().socket.send(JSON.stringify({event: "message", content:message}))
+        get().socket.send(JSON.stringify({event: "message", content: message}))
     }
 }))
