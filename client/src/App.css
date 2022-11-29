@@ -17,23 +17,43 @@
   font-family:  DejaVu Sans Mono monospace;
   user-select: none;
 }
+
 .char:hover{
-  animation: drop ease-out 0.5s;
+  cursor: crosshair;
 }
 
+.char:active {
+  animation: drop ease-out 1s;
+}
 @keyframes drop {
   0% {
     transform: translateY(0px);
+    text-shadow: #8a0a04 0 0 30px;
   }
-  50% {
+  5%{
+    transform: translateY(10px) rotate(-10deg);
+  }
+  10% {
+    transform: translateY(20px) rotate(10deg);
+  }
+  15% {
+    transform: translateY(30px) rotate(-15deg);
+  }
+  20% {
+    transform: translateY(40px) rotate(-30deg);
+  }
+  30% {
+    transform: translateY(400px) rotate(-45deg);
+  }
+  70% {
     transform: translateY(1000px);
-    filter: opacity(0.1);
+    filter: opacity(0);
   }
-  75% {
+  80% {
     transform: translateY(-200px);
-    filter: opacity(0.5);
+    filter: opacity(0);
   }
-  0% {
+  100% {
     transform: translateY(0px);
   }
 }
