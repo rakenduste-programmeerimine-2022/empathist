@@ -108,8 +108,8 @@ const Navbar = () => {
       <nav className="navbar is-dark" role="navigation">
         <div className="navbar-brand">
           <div
-            className=" navbar-item is-size-2 is-size-4-touch ml-3 mr-6 has-text-light "
-            id="navTitle"
+            className="navbar-item is-size-2 is-size-4-touch ml-3 mr-6 has-text-light"
+            id="navTitle" style={{cursor: "none"}}
           >
             <div className="char" id="title-1-char">E</div>
             <div className="char" id="title-2-char">m</div>
