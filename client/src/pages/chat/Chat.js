@@ -41,7 +41,7 @@ const Chat = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const enterRoom = useUserStore((state) => state.enterRoom)
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
-
+  
 
   useEffect(() => {
       const socket = new WebSocket("ws://localhost:2500/chat")
@@ -155,13 +155,14 @@ const Chat = () => {
                       <article
                         className={`message ${
                           message.username === user.username ? "right" : "left"
-                        } is-primary`}
+                        } `}
                         key={new Date(message.sentAt).getTime()}
+                        style={{backgroundColor: message.color}}
                       >
                         <div className="message-header p-2">
                           {message.username}
                         </div>
-                        <div className="message-body  p-2">
+                        <div className="message-body  p-2" >
                           {message.content}
                         </div>
                         <span className="time m-1">

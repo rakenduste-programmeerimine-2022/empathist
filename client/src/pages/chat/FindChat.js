@@ -27,7 +27,6 @@ const FindChat = ({rooms}) => {
   return (
     <>
       <section className="hero-head">
-        <div className="title">Find chat</div>
         <div className="search-bar py-3">
           <div className="dropdown is-hoverable">
             <div className="dropdown-trigger">
