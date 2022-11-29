@@ -7,7 +7,7 @@ const Login = ({ isActive, setIsActive }) => {
   const login = useUserStore((state) => state.login)
   const setIsSignupOpen = useNavbarStore((state) => state.setIsSignupOpen)
   const setNotification = useNavbarStore((state) => state.setGlobalNotification)
-    const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
+  const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
   const handleLogin = (e) => {
     login(email, password)
         .then(()=>setEmail(''))

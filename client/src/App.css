@@ -1,13 +1,41 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
 
-  --main-yellow: #FCB43A; 
+  --main-yellow: #FCB43A;
+  --title: #2F2F2F;
   --dark: hsl(0, 0%, 21%);
   --light: hsl(0, 0%, 98%);
 }
 
 #navTitle {
-  color: var(--main-yellow) !important;
+  color: var(--title) !important;
+}
+
+.char{
+  transition: all 500ms ease-in;
+  color: rgba(133,126,84,0.89);
+  font-family:  DejaVu Sans Mono monospace;
+  user-select: none;
+}
+.char:hover{
+  animation: drop ease-out 0.5s;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(1000px);
+    filter: opacity(0.1);
+  }
+  75% {
+    transform: translateY(-200px);
+    filter: opacity(0.5);
+  }
+  0% {
+    transform: translateY(0px);
+  }
 }
 
 @media screen and (max-width: 1023px) {
