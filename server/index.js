@@ -51,7 +51,29 @@ let rooms = [
     {id:3, name:"Room 3", messages:[{...defaultMessage, content: "Welcome to room #3"}],users:[],type:"public",creator:"server"},
 ]
 
-const chatColors = ["#f2ca4b","#fc757f","#e680ff","#ae5caa","#d9a6ff","#ccccff","#fbfadf","#fbd6d6","#8ac2ce","#8e85c5"]
+const chatColors = [
+    {header:"#c293d7",background:"#7c6da5",font:"#3d4d74"},
+    {header: "#939ed7",background: "#cad6e8",font: "#212939" },
+    {header: "#92b18e",background: "#cbd7a3",font: "#efefe6"},
+    {header: "#e7cfd5",background: "#f6f6f2",font: "#101000"},
+    {header: "#c8b5db",background: "#efe0ef",font: "#777886"},
+    {header: "#cbd2ea",background: "#f0eef0",font: "#1f202f"},
+    {header: "#cebd4b",background: "#d6d66f",font: "#7c7974"},
+    {header: "#cac6a5",background: "#e0c8c8",font: "#10010e"},
+    {header: "#dfa0df",background: "#e5bbc7",font: "#7e777a"},
+    {header: "#d98197",background: "#e2a7b9",font: "#582b43"},
+    {header: "#dcdc95",background: "#e2e2ae",font: "#d9b47d"},
+    {header: "#483073",background: "#ae7297",font: "#acac7b"},
+    {header: "#1a3080",background: "#e2e2ae",font: "#d4c066"},
+    {header: "#d4c066",background: "#e2e2ae",font: "#1a3080"},
+    {header: "#cab5a5",background: "#d8d8c1",font: "#180905"},
+    {header: "#db85da",background: "#cab5a5",font: "#e8e8c9"},
+    {header: "#559e9d",background: "#a5caba",font: "#717b78"},
+    {header: "#74764c",background: "#b8b27f",font: "#000000"},
+    {header: "#2bb3c8",background: "#2bc9a9",font: "#e5e5b0"},
+    {header: "#a6b882",background: "#bcbf8d",font: "#f8f8f8"},
+    {header: "#ccd4ea",background: "#74764c",font: "#c2a96a"},
+]
 
 let activeUsers = []
 
@@ -184,7 +206,7 @@ async function connectUser(ws, message) {
             ws.username = message.username
             ws.connected = true
             ws.createdRooms = []
-            ws.color = chatColors[Math.floor(Math.random() * chatColors.length)]
+            ws.userColors = chatColors[Math.floor(Math.random() * chatColors.length)]
             return true
         }
         return false
@@ -239,7 +261,7 @@ app.ws('/chat', (ws, req) => {
                     username: ws.username,
                     sentAt: new Date(),
                     type: "user-message",
-                    color: ws.color
+                    userColors: ws.userColors
                 }
                 if (ws.connected) {
                     const saved = saveMessage(newMessage, ws.roomID)

@@ -157,12 +157,12 @@ const Chat = () => {
                           message.username === user.username ? "right" : "left"
                         } `}
                         key={new Date(message.sentAt).getTime()}
-                        style={{backgroundColor: message.color}}
+                        style={{backgroundColor: message.userColors?.background}}
                       >
-                        <div className="message-header p-2">
+                        <div className="message-header p-2" style={{backgroundColor:message.userColors?.header}}>
                           {message.username}
                         </div>
-                        <div className="message-body  p-2" >
+                        <div className="message-body  p-2" style={{color: message.userColors?.font}}>
                           {message.content}
                         </div>
                         <span className="time m-1">
