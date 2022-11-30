@@ -5,6 +5,13 @@ export const InteractiveLogo = ({handleSwitch}) => {
 
     const [clicks, setClicks] = useState(0);
 
+    useEffect(() => {
+        setTimeout(() => {
+            document.getElementById(("navTitle")).classList.add("is-size-1")
+
+        },50)
+    },[])
+
     const handleClick = () => {
         setClicks(clicks=>clicks + 1);
         if (clicks >= 6) {
@@ -37,7 +44,7 @@ export const InteractiveLogo = ({handleSwitch}) => {
 
     return (
         <div
-    className="navbar-item is-size-1 is-size-4-touch ml-3 mr-6 has-text-light"
+    className="navbar-item is-size-4-touch ml-3 mr-6 has-text-light"
     id="navTitle" style={{cursor: "none"}}>
             <div className="char" id="title-1-char" onMouseDown={handleClick}>E</div>
             <div className="char" id="title-2-char" onMouseDown={handleClick}>m</div>

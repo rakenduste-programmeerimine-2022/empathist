@@ -44,8 +44,6 @@ const Navbar = () => {
     setGlobalNotification("You have left the chat")
     setIsNotificationOpen(true)
     window.location.replace(welcome.path);
-
-
   }
 
   const handleLoginClick = () => {
@@ -75,13 +73,13 @@ const Navbar = () => {
   useEffect(() => {
     setIsNotificationOpen(true)
     console.log("Notification is updated")
+    // eslint-disable-next-line
   },[globalNotification])
 
   return (
     <>
       <nav className="navbar is-dark" role="navigation">
         <div className="navbar-brand">
-
             {isSecretLogoOpen ? <InteractiveLogo handleSwitch={setIsSecretLogoOpen}/> : <Logo handleSwitch={setIsSecretLogoOpen}/>}
         <div
             role="button"
