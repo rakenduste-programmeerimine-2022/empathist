@@ -12,17 +12,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import {EnterName} from "./EnterName";
 import {Notification} from "../errors/Notification";
+import {InteractiveLogo} from "../navbar/InteractiveLogo";
+import {Logo} from "../navbar/Logo";
 
 const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
 const welcome = { name: "Welcome", path: "/", icon: faHome }
 
-const charStyle = {
-  opacity: "0.5",
-  hueRotate: "180deg",
-  brightness: "0.5",
-  saturate: "0.5",
-}
 
 
 const Navbar = () => {
@@ -42,6 +38,7 @@ const Navbar = () => {
   const globalNotification = useNavbarStore((state) => state.globalNotification)
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
   const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
+  const [isSecretLogoOpen, setIsSecretLogoOpen] = useState(false)
 
   const handleWelcomeClick = async () => {
     console.log("Going to welcome page")
@@ -82,46 +79,13 @@ const Navbar = () => {
     console.log("Notification is updated")
   },[globalNotification])
 
-  useEffect(() => {
-      let counter = 1
-      const interval = setInterval(() => {
-        let element = document.getElementById(`title-${counter}-char`)
-        element.style.filter = `brightness(2) saturate(2) drop-shadow(0 0 20px yellow) `
-        setTimeout(() => {
-          element.style.filter = ` saturate(0.1) brightness(0.1) contrast(2) drop-shadow(0 20px 40px black)`
-        },500)
-        setTimeout(() => {
-          element.style.filter = ` brightness(1) saturate(1)  `
-        },500)
-          if (counter < 9) {
-            counter++
-          }
-          else {
-            counter = 1
-          }
-      },1000)
-        return () => clearInterval(interval)
-  },[])
 
   return (
     <>
       <nav className="navbar is-dark" role="navigation">
         <div className="navbar-brand">
-          <div
-            className="navbar-item is-size-2 is-size-4-touch ml-3 mr-6 has-text-light"
-            id="navTitle" style={{cursor: "none"}}
-          >
-            <div className="char" id="title-1-char">E</div>
-            <div className="char" id="title-2-char">m</div>
-            <div className="char" id="title-3-char">p</div>
-            <div className="char" id="title-4-char">a</div>
-            <div className="char" id="title-5-char">t</div>
-            <div className="char" id="title-6-char">h</div>
-            <div className="char" id="title-7-char">i</div>
-            <div className="char" id="title-8-char">s</div>
-            <div className="char" id="title-9-char">t</div>
-          </div>
-          <div
+            {isSecretLogoOpen ? <InteractiveLogo handleSwitch={setIsSecretLogoOpen}/> : <Logo handleSwitch={setIsSecretLogoOpen}/>}
+        <div
             role="button"
             className={`navbar-burger ${navToggle}`}
             aria-label="menu"
@@ -160,8 +124,8 @@ const Navbar = () => {
                   onClick={()=>setISFindChatOpen(false)}
               >
               <span className="icon-text">
-                <span className="icon pr-2">
-                  <FontAwesomeIcon icon={roomID?chat.icon:findChat.icon} />
+                <span className="icon is-small pr-2">
+                  <FontAwesomeIcon className="fas" icon={roomID?chat.icon:findChat.icon} />
                 </span>
                 <span>{roomID?chat.name:findChat.name}</span>
               </span>
