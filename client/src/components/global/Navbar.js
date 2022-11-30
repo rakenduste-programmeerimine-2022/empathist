@@ -19,8 +19,6 @@ const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
 const welcome = { name: "Welcome", path: "/", icon: faHome }
 
-
-
 const Navbar = () => {
   const [navToggle, setNavToggle] = useState("")
   const [navMenu, setNavMenu] = useState("")
@@ -79,11 +77,11 @@ const Navbar = () => {
     console.log("Notification is updated")
   },[globalNotification])
 
-
   return (
     <>
       <nav className="navbar is-dark" role="navigation">
         <div className="navbar-brand">
+
             {isSecretLogoOpen ? <InteractiveLogo handleSwitch={setIsSecretLogoOpen}/> : <Logo handleSwitch={setIsSecretLogoOpen}/>}
         <div
             role="button"
