@@ -9,7 +9,7 @@ export const Notification = () => {
     return (
         <div className={ isNotificationOpen? "modal is-active" : "modal"}>
             <div className="modal-background" onClick={()=>setIsNotificationOpen(false)}></div>
-                <div className="modal-card px-2">
+                <div className="notification  modal-card px-2">
                     <header className="modal-card-head">
                         <p className="modal-card-title is-size-2">Notification</p>
                         <button

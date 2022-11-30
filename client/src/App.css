@@ -8,12 +8,12 @@
 }
 
 #navTitle {
-  color: var(--title) !important;
+  color: var(--main-yellow) !important;
 }
 
 .char{
   transition: all 500ms ease-in;
-  color: rgba(133,126,84,0.89);
+  color: #c3b263;
   font-family:  DejaVu Sans Mono monospace;
   user-select: none;
 }
@@ -100,7 +100,6 @@
 
 .search-bar{
   display: flex;
-  justify-content: center;
   align-items: center;
   margin: 0 auto;
   justify-content: space-between;
