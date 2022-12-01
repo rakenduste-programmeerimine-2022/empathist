@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react"
+import {useState, useEffect, useRef} from "react"
 import FindChat from "./FindChat"
 import { useNavbarStore, useUserStore } from "../../store/store"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {NewMessageInChat} from "../../components/global/chat/NewMessageInChat";
 
 const defaultMessages = [
   {
@@ -41,7 +43,14 @@ const Chat = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const enterRoom = useUserStore((state) => state.enterRoom)
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
+  const [isNewMessageInChat,setIsNewMessageInChat] = useState(false)
+  const unreadMessage = useRef(null)
   
+  const handleScrollToNewMessage = () => {
+    unreadMessage.current.scrollIntoView({behavior: "smooth"})
+    setIsNewMessageInChat(false)
+  }
+
 
   useEffect(() => {
       const socket = new WebSocket("ws://localhost:2500/chat")
@@ -77,6 +86,14 @@ const Chat = () => {
       if (message.event === "chatUpdate") {
         setMessages(message.messages)
         setRooms(message.rooms)
+        if (message.messages.length > 3) {
+          setIsNewMessageInChat(true)
+        }
+        if (message.messages.at(-1).username === user.username) {
+          handleScrollToNewMessage()
+        }
+
+
       }
       if (message.event === "connected") {
         console.log(message.content)
@@ -131,6 +148,7 @@ const Chat = () => {
   //   ctx.fill();
   // }
 
+
   if (roomID) {
     return (
       <div>
@@ -151,8 +169,10 @@ const Chat = () => {
                     <div className="title">{roomName.length?roomName:"Chat"}</div>
                   </section>
                   <section className="hero-body p-2 chat mt-3">
+                    {isNewMessageInChat&&<NewMessageInChat handleScrollToNewMessage={handleScrollToNewMessage}/>}
                     {messages.map((message) => (
                       <article
+                          ref={unreadMessage}
                         className={`message ${
                           message.username === user.username ? "right" : "left"
                         } `}
