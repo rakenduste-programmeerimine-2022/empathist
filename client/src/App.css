@@ -172,3 +172,24 @@
   font-size: 0.9rem;
   float: right;
 }
+
+
+.toolbar{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.toolbar button{
+  margin: 0 10px;
+}
+
+canvas{
+  z-index: 100;
+  border: 1px solid black;
+}
+
+#canvasContainer{
+  max-width: 100%;
+}
