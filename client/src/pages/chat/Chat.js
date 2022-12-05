@@ -1,10 +1,9 @@
-import {useState, useEffect, useRef} from "react"
+import { useState, useEffect, useRef } from "react"
 import FindChat from "./FindChat"
 import { useNavbarStore, useUserStore } from "../../store/store"
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {NewMessageInChat} from "../../components/global/chat/NewMessageInChat";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { NewMessageInChat } from "../../components/global/chat/NewMessageInChat"
 import Canvas from "../canvas/Canvas"
-
 
 const defaultMessages = [
   {
@@ -44,10 +43,10 @@ const Chat = () => {
   const roomID = useUserStore((state) => state.roomID)
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const enterRoom = useUserStore((state) => state.enterRoom)
-  const [isNewMessageInChat,setIsNewMessageInChat] = useState(false)
+  const [isNewMessageInChat, setIsNewMessageInChat] = useState(false)
   const unreadMessage = useRef(null)
   const handleScrollToNewMessage = () => {
-    unreadMessage.current.scrollIntoView({behavior: "smooth"})
+    unreadMessage.current.scrollIntoView({ behavior: "smooth" })
     setIsNewMessageInChat(false)
   }
   const setGlobalNotification = useNavbarStore(
@@ -93,8 +92,6 @@ const Chat = () => {
         if (message.messages.at(-1).username === user.username) {
           handleScrollToNewMessage()
         }
-
-
       }
       if (message.event === "connected") {
         console.log(message.content)
@@ -149,18 +146,15 @@ const Chat = () => {
   //   ctx.fill();
   // }
 
-
   if (roomID) {
     return (
       <div>
         <div className="container is-fluid">
           <div className="title pt-5">Chat page</div>
-          <div className="columns pt-3">
-            <div className="column is-half">
+          <div className="columns pt-3 ">
+            <div className="column is-half canvas-column">
               <div className="box">
-                <section className="hero is-halfheight">
-                  {isFindChatOpen ? <FindChat rooms={rooms} /> : <Canvas />}
-                </section>
+                {isFindChatOpen ? <FindChat rooms={rooms} /> : <Canvas />}
               </div>
             </div>
             <div className="column is-half">
@@ -172,10 +166,14 @@ const Chat = () => {
                     </div>
                   </section>
                   <section className="hero-body p-2 chat mt-3">
-                    {isNewMessageInChat&&<NewMessageInChat handleScrollToNewMessage={handleScrollToNewMessage}/>}
+                    {isNewMessageInChat && (
+                      <NewMessageInChat
+                        handleScrollToNewMessage={handleScrollToNewMessage}
+                      />
+                    )}
                     {messages.map((message) => (
                       <article
-                          ref={unreadMessage}
+                        ref={unreadMessage}
                         className={`message ${
                           message.username === user.username ? "right" : "left"
                         } `}

@@ -178,7 +178,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
 }
 
 .toolbar button{
@@ -188,8 +187,27 @@
 canvas{
   z-index: 100;
   border: 1px solid black;
+  border-radius: 5px;
 }
 
-#canvasContainer{
-  max-width: 100%;
+.canvas-section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvas-column{
+  min-width: 600px;
+}
+
+@media screen and (max-width: 700px) {
+  .container{
+    overflow-y: hidden;
+    overflow-x: scroll;
+  }
+}
+
+.is-halfheight{
+  min-height: 600px !important;
 }
