@@ -183,33 +183,35 @@ function saveMessage(message,roomID){
 }
 
 async function connectUser(ws, message) {
+    if (message.id) {
+        const user = await User.findOne({id: message.id})
+        if (user) {
+            console.log(`User ${user.username} found in DB`)
+            ws.id = message.id
+            ws.isRegistered = true
+            ws.username = user.username
+        }else {
+            console.log(`User ${message.username} was not found in database`)
+            return false
+        }
+    }else {
         console.log(`checking ${message.username}`)
         const isValidUsername = await checkUsername(message.username, message.id)
         console.log(`username is valid: ${isValidUsername}`)
         if (isValidUsername) {
-            if (message.id) {
-                const user = await User.findOne({id: message.id})
-                if (user) {
-                    console.log(`User ${message.username} found in DB`)
-                    ws.id = message.id
-                    ws.isRegistered = true
-                }else {
-                    console.log(`User ${message.username} was not found in database`)
-                    return false
-                }
-
-            } else {
-                ws.id = (Math.floor(Math.random() * 100) + 1) +
-                    new Date().getTime() +
-                    (Math.floor(Math.random() * 100) + 1)
-            }
+            ws.id = (Math.floor(Math.random() * 100) + 1) +
+                new Date().getTime() +
+                (Math.floor(Math.random() * 100) + 1)
             ws.username = message.username
-            ws.connected = true
-            ws.createdRooms = []
-            ws.userColors = chatColors[Math.floor(Math.random() * chatColors.length)]
-            return true
+        }else {
+            return false
         }
-        return false
+    }
+    ws.connected = true
+    ws.createdRooms = []
+    ws.userColors = chatColors[Math.floor(Math.random() * chatColors.length)]
+    return true
+
 }
 
 function createRoom(ws,name,type){
@@ -303,6 +305,7 @@ app.ws('/chat', (ws, req) => {
             }
             if (message.event === "connect") {
                 console.log(`${message.username} is trying to connect`)
+                handleDisconnect()
                 const connected = await connectUser(ws, message)
                 console.log(`connected: ${connected}`)
                 if (connected) {

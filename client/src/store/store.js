@@ -36,10 +36,11 @@ export const useUserStore = create((set,get) => ({
         try {
             const response = await AuthService.login(email, password)
             localStorage.setItem('token', response.data.accessToken)
-            set(() => ({isAuth: true}))
-            set(() => ({ user: response.data.user }))
+            console.log(response.data)
+            set(() => ({isAuth: true,user: response.data.user}))
         } catch (err) {
             console.log(err.response?.data?.message)
+            set(() => ({isAuth:false, user: {},roomID: null}))
         }
     },
     registration: async (email, password,username) => {
