@@ -19,7 +19,7 @@ const Toolbar = () => {
   const fillStyle = useCanvasStore((state) => state.fillStyle)
 
   return (
-    <div className="toolbar">
+    <div className="toolbar mb-3">
       <button
         className="button is-primary"
         onClick={() => handleBrushPick("eraser")}
