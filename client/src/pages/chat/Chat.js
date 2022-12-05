@@ -44,8 +44,6 @@ const Chat = () => {
   const roomID = useUserStore((state) => state.roomID)
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const enterRoom = useUserStore((state) => state.enterRoom)
-
-  const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
   const [isNewMessageInChat,setIsNewMessageInChat] = useState(false)
   const unreadMessage = useRef(null)
   const handleScrollToNewMessage = () => {
