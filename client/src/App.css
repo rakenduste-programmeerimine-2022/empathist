@@ -176,7 +176,7 @@
 
 .toolbar{
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -192,9 +192,9 @@ canvas{
 
 .canvas-section{
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .canvas-column{
@@ -210,4 +210,8 @@ canvas{
 
 .is-halfheight{
   min-height: 600px !important;
+}
+
+.toolbar-item{
+  width: 4rem;
 }

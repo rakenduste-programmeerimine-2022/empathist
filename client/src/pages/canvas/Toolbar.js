@@ -5,6 +5,14 @@ import {
   useRectangleStore,
   useCircleStore,
 } from "../../store/canvasStore"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {
+  faEraser,
+  faPaintBrush,
+  faCircle,
+  faSquare,
+  faArrowTrendUp,
+} from "@fortawesome/free-solid-svg-icons"
 
 const Toolbar = () => {
   const handleBrushPick = useBrushStore((state) => state.handleBrushPick)
@@ -21,44 +29,53 @@ const Toolbar = () => {
   return (
     <div className="toolbar mb-3">
       <button
-        className="button is-primary"
+        className="button is-text p-1"
         onClick={() => handleBrushPick("eraser")}
       >
-        Eraser
+        <FontAwesomeIcon icon={faEraser} className="is-size-3" />
       </button>
       <button
-        className="button is-info"
+        className="button is-text p-1"
         onClick={() => handleBrushPick("brush")}
       >
-        Brush
+        <FontAwesomeIcon icon={faPaintBrush} className="is-size-3" />
       </button>
-      <button className="button is-warning" onClick={handleCirclePick}>
-        Circle
+      <button className="button is-text p-1" onClick={handleCirclePick}>
+        <FontAwesomeIcon icon={faCircle} className="is-size-3" />
       </button>
-      <button className="button is-warning" onClick={handleRectPick}>
-        Rect
+      <button className="button is-text p-1" onClick={handleRectPick}>
+        <FontAwesomeIcon icon={faSquare} className="is-size-3" />
       </button>
-      <button className="button is-success" onClick={handleLinePick}>
-        Line
+      <button className="button is-text p-1" onClick={handleLinePick}>
+        <FontAwesomeIcon icon={faArrowTrendUp} className="is-size-3" />
       </button>
-      <input
-        type="color"
-        value={strokeStyle}
-        onChange={(e) => setStrokeStyle(e.target.value)}
-      ></input>
-      <input
-        type="color"
-        value={fillStyle}
-        onChange={(e) => setFillStyle(e.target.value)}
-      ></input>
-
-      <div className="line-width mx-2">
-        <label htmlFor="line-width">Line width: {lineWidth}</label>
+      <div className="toolbar-item mx-2">
+        <label className="label my-0">Stroke</label>
         <input
-          id="line-width"
-          type="range"
+          className="input p-1"
+          type="color"
+          value={strokeStyle}
+          onChange={(e) => setStrokeStyle(e.target.value)}
+        ></input>
+      </div>
+
+      <div className="toolbar-item mx-2">
+        <label className="label my-0">Fill</label>
+        <input
+          className="input p-1"
+          type="color"
+          value={fillStyle}
+          onChange={(e) => setFillStyle(e.target.value)}
+        ></input>
+      </div>
+
+      <div className="toolbar-item mx-2">
+        <label className="label my-0">Width</label>
+        <input
+          className="input"
+          type="number"
           min="1"
-          max="50"
+          max="30"
           value={lineWidth}
           onChange={(e) => setLineWidth(e.target.value)}
         ></input>
