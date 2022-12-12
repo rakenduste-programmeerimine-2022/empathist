@@ -3,16 +3,18 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons"
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useNavbarStore, useUserStore } from "../../store/store"
+import {useChatStore} from "../../store/chatStore";
 
 const searchOptions = [{ name: "By name" }]
 
-const FindChat = ({ rooms }) => {
+const FindChat = () => {
   const [searchRequest, setSearchRequest] = useState("")
-  const enterRoom = useUserStore((state) => state.enterRoom)
-  const exitRoom = useUserStore((state) => state.exitRoom)
-  const storedRoomID = useUserStore((state) => state.roomID)
+  const enterRoom = useChatStore((state) => state.enterRoom)
+  const exitRoom = useChatStore((state) => state.exitRoom)
+  const storedRoomID = useChatStore((state) => state.roomID)
   const user = useUserStore((state) => state.user)
   const setIsEnterNameOpen = useNavbarStore((state) => state.setIsEnterNameOpen)
+  const rooms = useChatStore((state) => state.rooms)
 
   const handleEnterRoom = async (roomID) => {
     if (storedRoomID !== null) {
@@ -88,7 +90,7 @@ const FindChat = ({ rooms }) => {
                     Join
                   </div>
                 </ul>
-              ))
+                ))
           ) : (
             <div className="notification is-empty">No rooms found</div>
           )}

@@ -14,6 +14,7 @@ import {EnterName} from "./EnterName";
 import {Notification} from "../errors/Notification";
 import {InteractiveLogo} from "../navbar/InteractiveLogo";
 import {Logo} from "../navbar/Logo";
+import {useChatStore} from "../../store/chatStore";
 
 const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
@@ -31,20 +32,11 @@ const Navbar = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const isLoginOpen = useNavbarStore((state) => state.isLoginOpen)
   const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
-  const roomID = useUserStore((state) => state.roomID)
-  const exitRoom = useUserStore((state) => state.exitRoom)
+  const roomID = useChatStore((state) => state.roomID)
   const globalNotification = useNavbarStore((state) => state.globalNotification)
   const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
   const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
   const [isSecretLogoOpen, setIsSecretLogoOpen] = useState(false)
-
-  const handleWelcomeClick = async () => {
-    console.log("Going to welcome page")
-    await exitRoom()
-    setGlobalNotification("You have left the chat")
-    setIsNotificationOpen(true)
-    window.location.replace(welcome.path);
-  }
 
   const handleLoginClick = () => {
     setIsLoginOpen(true)
@@ -101,9 +93,9 @@ const Navbar = () => {
           <div className="navbar-start">
               <Link
                 key={welcome.name}
+                to={welcome.path}
                 id="navItem"
                 className="navbar-item has-text-light is-size-4 px-5"
-                onClick={handleWelcomeClick}
               >
                 <span className="icon-text">
                   <span className="icon pr-2">
@@ -128,7 +120,8 @@ const Navbar = () => {
               </Link>
             {roomID&&<Link
                 onClick={isFindChatOpen?()=>setISFindChatOpen(false):()=>setISFindChatOpen(true)}
-                className=" navbar-item is-link has-text-light is-size-4 px-5">
+                className=" navbar-item is-link has-text-light is-size-4 px-5"
+                to={findChat.path}>
               <span className="icon-text">
                 <span className="icon pr-2">
                   <FontAwesomeIcon icon={findChat.icon} />
@@ -145,7 +138,7 @@ const Navbar = () => {
                   <span className="icon pr-2">
                     <FontAwesomeIcon icon={faUser} />
                   </span>
-                  <span>{isAuth?user.username:"Profile"}</span>
+                  <span>{isAuth?`${user.username}(member)`:user.username?`${user.username}(guest)`:"Profile"}</span>
                 </span>
               </div>
               <div className="navbar-dropdown is-right has-background-dark">

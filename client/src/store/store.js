@@ -25,18 +25,12 @@ export const useNavbarStore = create((set) => ({
 
 export const useUserStore = create((set,get) => ({
     user: {},
-    socket: null,
     isAuth: false,
-    roomID: null,
-    setRoomID: (value) => set(() => ({ roomID: value })),
-    setSocket : (socket) => set(() => ({ socket: socket })),
     setUser: (user) => set(() => ({ user: user })),
-    setIsAuth: (value) => set(() => ({ isAuth: value })),
     login: async (email, password) => {
         try {
             const response = await AuthService.login(email, password)
             localStorage.setItem('token', response.data.accessToken)
-            console.log(response.data)
             set(() => ({isAuth: true,user: response.data.user}))
         } catch (err) {
             console.log(err.response?.data?.message)
@@ -58,9 +52,7 @@ export const useUserStore = create((set,get) => ({
             const response = await AuthService.logout()
             console.log(response)
             localStorage.removeItem('token')
-            set(() => ({isAuth: false}))
-            set(() => ({roomID: null}))
-            set(() => ({user: {}}))
+            set(() => ({isAuth: false,roomID: null,user: {}}))
         } catch (err) {
             console.log(err.response?.data?.message)
         }
@@ -74,17 +66,5 @@ export const useUserStore = create((set,get) => ({
         }catch (err){
             console.log(err.response?.data?.message)
         }
-    },
-    enterRoom: (roomID) => {
-        console.log(`Trying to enter room ${roomID}`)
-        get().socket.send(JSON.stringify({event: "enter", roomID}))
-    },
-    exitRoom: async () => {
-        console.log(`Trying to exit room ${get().roomID}`)
-        await get().socket.send(JSON.stringify({event: "exit"}))
-    },
-    sendMessage:(message) => {
-        console.log(`Trying to send message ${message}`)
-        get().socket.send(JSON.stringify({event: "message", content: message}))
     }
 }))
