@@ -46,9 +46,9 @@ let defaultMessage = {
 let bannedNames = ["server","admin","moderator"]
 
 let rooms = [
-    {id:1, name:"Room 1", messages:[{...defaultMessage, content: "Welcome to room #1"}],users:[],type:"public",creator:"server"},
-    {id:2, name:"Room 2", messages:[{...defaultMessage, content: "Welcome to room #2"}],users:[],type:"public",creator:"server"},
-    {id:3, name:"Room 3", messages:[{...defaultMessage, content: "Welcome to room #3"}],users:[],type:"public",creator:"server"},
+    {id:1, name:"Room 1", messages:[],users:[],type:"public",creator:"server",serverMessages:[{...defaultMessage, content: "Welcome to room #1"}]},
+    {id:2, name:"Room 2", messages:[],users:[],type:"public",creator:"server",serverMessages:[{...defaultMessage, content: "Welcome to room #1"}]},
+    {id:3, name:"Room 3", messages:[],users:[],type:"public",creator:"server",serverMessages:[{...defaultMessage, content: "Welcome to room #1"}]},
 ]
 
 const chatColors = [
@@ -86,18 +86,20 @@ function handleDisconnect() {
             activeUsers.push({id:client.id,username:client.username})
         }
     })
-
-    rooms = rooms.map(room=>room.users.length?{...room,users:[...room.users.filter(user=>activeUsers.includes(user))]}:room)
-
+    rooms = rooms
+        .map(room=>room.users.length?{...room,users:[...room.users
+                .filter(user=>{
+                   if (activeUsers.includes(user)){
+                       return saveMessage({...defaultMessage,content:`${user.username} has disconnected`},room.id)
+                   }
+                })]}:room)
 }
 
 function broadcast(roomID,event){
     roomID = parseInt(roomID)
     expressWs.getWss().clients.forEach(client => {
         if(client.roomID) {
-            console.log(`Checking ${client.username} in room ${client.roomID}`)
             if (client.roomID === roomID) {
-                console.log(`Broadcasting to ${client.username} in room ${client.roomID}`)
                 const room = rooms.find(item => item.id === roomID)
                 if (event === "chatUpdate") {
                     client.send(JSON.stringify({
@@ -106,6 +108,7 @@ function broadcast(roomID,event){
                         room: room.name,
                         users: room.users,
                         messages: room.messages,
+                        serverMessages: room.serverMessages,
                         rooms: mapRooms(client),
                         roomType: room.type
                     }))
@@ -176,8 +179,16 @@ function saveMessage(message,roomID){
     let room = rooms.find(item=>item.id===roomID)
     console.log(room)
     if(room){
-        rooms = rooms.map(room=>room.id===roomID? {...room,messages: [...room.messages, message]}:room)
-        return true
+        switch (message.type) {
+            case "user-message":
+                rooms = rooms.map(room => room.id === roomID ? {...room, messages: [...room.messages, message]} : room)
+                return true
+            case "server-message":
+                rooms = rooms.map(room => room.id === roomID ? {...room, serverMessages: [...room.serverMessages, message]} : room)
+                return true
+            default:
+                return false
+        }
     }
     return false
 }
@@ -283,15 +294,16 @@ app.ws('/chat', (ws, req) => {
                         const saved = saveMessage({
                                 username: "Server",
                                 sentAt: new Date(),
-                                content: `User ${ws.username} has entered`
+                                content: `User ${ws.username} has entered`,
+                                type: "server-message"
                             },
-                            ws.roomID)
+                            message.roomID)
                         if (saved) {
                             ws.send(JSON.stringify({
                                 event: "entered",
-                                content: `Entered room ${message.roomID}`,
-                                roomName: rooms.find(item => item.id === message.roomID).name,
-                                roomID: message.roomID,
+                                content: `Entered room ${ws.roomID}`,
+                                roomName: rooms.find(item => item.id === ws.roomID).name,
+                                roomID: ws.roomID,
                             }))
                             broadcast(ws.roomID, "chatUpdate")
 
@@ -329,30 +341,34 @@ app.ws('/chat', (ws, req) => {
                     }))
                 }
             }
-
-
             if (message.event === "exit") {
-                const exited = exitRoom(ws.roomID, ws.username)
-                if (exited) {
-                    ws.roomID = null
-                    const saved = saveMessage({
-                            username: "Server",
-                            sentAt: new Date(),
-                            content: `User ${ws.username} has exited`
-                        },
-                        ws.roomID)
-                    if (saved) {
-                        ws.send(JSON.stringify({
-                            event: "exited",
-                            content: `Exited room ${message.roomID}`,
-                            rooms: mapRooms(ws)
-                        }))
-                        broadcast(message.roomID, "chatUpdate")
+                if (ws.roomID) {
+                    const exited = exitRoom(ws.roomID, ws.username)
+                    if (exited) {
+                        const oldRoomID = ws.roomID
+                        ws.roomID = null
+                        const saved = saveMessage({
+                                username: "Server",
+                                sentAt: new Date(),
+                                content: `User ${ws.username} has exited`,
+                                type: "server-message"
+                            },
+                            oldRoomID)
+                        if (saved) {
+                            ws.send(JSON.stringify({
+                                event: "exited",
+                                content: `Exited room ${oldRoomID}`,
+                                rooms: mapRooms(ws)
+                            }))
+                            broadcast(oldRoomID, "chatUpdate")
+                        } else {
+                            ws.send(JSON.stringify({event: "error", content: `Room ${oldRoomID} not found`}))
+                        }
                     } else {
-                        ws.send(JSON.stringify({event: "error", content: `Room ${message.roomID} not found`}))
+                        ws.send(JSON.stringify({event: "error", content: `Could not exit room ${ws.roomID}`}))
                     }
                 } else {
-                    ws.send(JSON.stringify({event: "error", content: `Could not exit room ${ws.roomID}`}))
+                    ws.send(JSON.stringify({event: "error", message: "You are not in a room"}))
                 }
             }
             if (message.event === "createRoom") {

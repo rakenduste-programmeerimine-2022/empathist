@@ -168,6 +168,27 @@
 }
 
 
+.chat-message-context-menu-container{
+    border-radius: 5%;
+    padding: 1rem;
+    position: absolute;
+    z-index: 100;
+    min-width: 5%;
+    animation: flyOut ease-out 0.5s;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+
+
+}
+.chat-message-context-menu-option{
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.chat-message-context-menu-option:hover{
+  background-color: rgba(4,5,13,0.27);
+
+}
+
+
 .time{
   font-size: 0.9rem;
   float: right;
@@ -214,4 +235,27 @@ canvas{
 
 .toolbar-item{
   width: 4rem;
+}
+
+@keyframes flyOut {
+  from {
+    transform: translateX(-10em) scale(0);
+    opacity: 0;
+  }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInOut{
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
