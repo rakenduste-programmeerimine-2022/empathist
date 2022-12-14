@@ -4,48 +4,30 @@ import { useCanvasStore } from "../../store/canvasStore"
 
 const Canvas = () => {
   const canvasRef = useRef()
-  const contextRef = useRef()
 
   const setContext = useCanvasStore((state) => state.setContext)
-
   const setCanvas = useCanvasStore((state) => state.setCanvas)
+  //const resizeCanvasToDisplaySize = useCanvasStore((state) => state.resizeCanvasToDisplaySize)
 
   useEffect(() => {
-    /*
-    const handleResize = () => {
-      let boxWidth = document.getElementById("canvasContainer").offsetWidth
-      canvas.width = boxWidth
-      canvas.height = boxWidth
-    }
-    */
-
     const canvas = canvasRef.current
-    canvas.width = 500
-    canvas.height = 500
+    const context = canvas.getContext("2d")
     setCanvas(canvas)
-    const ctx = canvas.getContext("2d")
-    setContext(ctx)
+    //resizeCanvasToDisplaySize()
+    setContext(context)
     useCanvasStore.subscribe((state) => (canvasRef.current = state.canvas))
-    useCanvasStore.subscribe((state) => (contextRef.current = state.context))
-    /*
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    */
+
   }, [])
 
   return (
-    <>
-      <section className="hero is-halfheight canvas-section">
-        <section className="hero-head">
+      <section className="hero is-halfheight" /*onResize={resizeCanvasToDisplaySize}*/>
+        <div className="hero-head">
           <Toolbar />
-        </section>
-        <section className="hero-body canvas-section">
-          <div id="canvasContainer">
-            <canvas id="canvas" className="canvas" ref={canvasRef}></canvas>
-          </div>
-        </section>
+        </div>
+        <div className="hero-body canvas-section" >
+            <canvas id="canvas" className="canvas" width={2560} height={1440} ref={canvasRef}></canvas>
+        </div>
       </section>
-    </>
   )
 }
 

@@ -75,7 +75,7 @@ const Toolbar = () => {
           className="input"
           type="number"
           min="1"
-          max="30"
+          max="100"
           value={lineWidth}
           onChange={(e) => setLineWidth(e.target.value)}
         ></input>
