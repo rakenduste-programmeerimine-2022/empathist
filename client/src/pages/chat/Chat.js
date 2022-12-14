@@ -15,6 +15,7 @@ const Chat = () => {
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const messages = useChatStore((state) => state.messages)
   const serverMessages = useChatStore((state) => state.serverMessages)
+  const [lastServerMessage, setLastServerMessage] = useState(null)
   const rooms = useChatStore((state) => state.rooms)
   const isNewMessageInChat = useChatStore((state) => state.isNewMessageInChat)
   const setIsNewMessageInChat = useChatStore((state) => state.setIsNewMessageInChat)
@@ -51,11 +52,14 @@ const Chat = () => {
   }, [messages])
 
   useEffect(() => {
-    setIsNewServerMessage(true)
-    const timeout = setTimeout(() => {
-      setIsNewServerMessage(false)
-    },8000)
-    return () => clearTimeout(timeout)
+    if(serverMessages[serverMessages.length - 1] !== lastServerMessage) {
+      setIsNewServerMessage(true)
+      setLastServerMessage(serverMessages[serverMessages.length - 1])
+      const timeout = setTimeout(() => {
+        setIsNewServerMessage(false)
+      }, 8000)
+      return () => clearTimeout(timeout)
+    }
   }, [serverMessages])
 
 
