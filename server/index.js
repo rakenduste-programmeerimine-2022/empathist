@@ -110,6 +110,7 @@ function broadcast(roomID,event){
                         users: room.users,
                         messages: room.messages
                             .map(message => formatMessage(message)),
+
                         serverMessages: room.serverMessages,
                         rooms: mapRooms(client),
                         roomType: room.type

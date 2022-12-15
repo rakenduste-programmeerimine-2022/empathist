@@ -25,14 +25,42 @@ export const useCanvasStore = create((set, get) => ({
     set(() => ({ lineWidth: value }))
     get().context.lineWidth = value
   },
-  setCanvas: (canvas) => set(() => ({ canvas })),
-  setContext: (context) => set(() => ({ context: context })),
+  setCanvas: (canvas) => set(() => ({canvas})),
+  setContext: (context) => set(() => ({context})),
   setMouseDown: (value) => set(() => ({ mouseDown: value })),
   setMouseMove: (value) => set(() => ({ mouseMove: value })),
+  setMousePosition: (e) => {
+    const rect = get().canvas.getBoundingClientRect()
+    const scaleX = get().canvas.width / rect.width
+    const scaleY = get().canvas.height / rect.height
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+    }
+  },
+
+  resizeCanvasToDisplaySize :() => {
+    const canvas = get().canvas
+    const dpr = window.devicePixelRatio;
+    const {width, height} = canvas.getBoundingClientRect();
+    const displayWidth  = Math.round(width * dpr);
+    const displayHeight = Math.round(height * dpr);
+
+    const needResize = canvas.width  !== displayWidth ||
+        canvas.height !== displayHeight;
+
+    if (needResize) {
+      canvas.width  = displayWidth;
+      canvas.height = displayHeight;
+    }
+  }
+
+
 }))
 
 export const useBrushStore = create((set, get) => ({
   handleBrushPick: (tool) => {
+    const canvas = useCanvasStore.getState().canvas
     const context = useCanvasStore.getState().context
     if (tool === "brush") {
       context.lineCap = useCanvasStore.getState().lineCap
@@ -45,11 +73,11 @@ export const useBrushStore = create((set, get) => ({
       context.strokeStyle = "white"
       context.lineWidth = "20"
     }
-    const canvas = useCanvasStore.getState().canvas
     canvas.onmousemove = (e) => {
       useCanvasStore.getState().setMouseMove(true)
       if (useCanvasStore.getState().mouseDown) {
-        get().draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
+        const mousePosition = useCanvasStore.getState().setMousePosition(e)
+        get().draw(mousePosition.x, mousePosition.y)
       }
     }
     canvas.onmouseup = (e) => {
@@ -61,9 +89,9 @@ export const useBrushStore = create((set, get) => ({
 
       useCanvasStore.getState().setMouseDown(true)
       context.beginPath()
+      const mousePosition = useCanvasStore.getState().setMousePosition(e)
       context.moveTo(
-        e.pageX - e.target.offsetLeft,
-        e.pageY - e.target.offsetTop
+          mousePosition.x, mousePosition.y
       )
     }
   },
@@ -85,7 +113,8 @@ export const useLineStore = create((set, get) => ({
     context.lineWidth = useCanvasStore.getState().lineWidth
     canvas.onmousemove = (e) => {
       if (useCanvasStore.getState().mouseDown) {
-        get().draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
+        const mousePosition = useCanvasStore.getState().setMousePosition(e)
+        get().draw(mousePosition.x, mousePosition.y)
       }
     }
     canvas.onmouseup = (e) => {
@@ -94,10 +123,11 @@ export const useLineStore = create((set, get) => ({
     canvas.onmousedown = (e) => {
       const context = useCanvasStore.getState().context
       useCanvasStore.getState().setMouseDown(true)
+      const mousePosition = useCanvasStore.getState().setMousePosition(e)
       set(() => ({
         startingCords: {
-          x: e.pageX - e.target.offsetLeft,
-          y: e.pageY - e.target.offsetTop,
+          x: mousePosition.x,
+          y: mousePosition.y,
         },
       }))
       context.beginPath()
@@ -128,8 +158,9 @@ export const useRectangleStore = create((set, get) => ({
     canvas.onmousemove = (e) => {
       useCanvasStore.getState().setMouseMove(true)
       if (useCanvasStore.getState().mouseDown) {
-        let currentX = e.pageX - e.target.offsetLeft
-        let currentY = e.pageY - e.target.offsetTop
+        const mousePosition = useCanvasStore.getState().setMousePosition(e)
+        let currentX = mousePosition.x
+        let currentY = mousePosition.y
         set(() => ({
           size: {
             width: currentX - get().startingCords.x,
@@ -151,10 +182,11 @@ export const useRectangleStore = create((set, get) => ({
       useCanvasStore.getState().setMouseDown(true)
       const context = useCanvasStore.getState().context
       context.beginPath()
+      const mousePosition = useCanvasStore.getState().setMousePosition(e)
       set(() => ({
         startingCords: {
-          x: e.pageX - e.target.offsetLeft,
-          y: e.pageY - e.target.offsetTop,
+          x: mousePosition.x,
+          y: mousePosition.y,
         },
       }))
       set(() => ({ save: canvas.toDataURL() }))
@@ -181,12 +213,14 @@ export const useCircleStore = create((set, get) => ({
     const canvas = useCanvasStore.getState().canvas
     canvas.onmousemove = (e) => {
       useCanvasStore.getState().setMouseMove(true)
+
       if (useCanvasStore.getState().mouseDown) {
-        let currentX = e.pageX - e.target.offsetLeft
-        let currentY = e.pageY - e.target.offsetTop
+        const mousePosition = useCanvasStore.getState().setMousePosition(e)
+        let currentX = mousePosition.x
+        let currentY = mousePosition.y
         let width = currentX - get().startingCords.x
         let height = currentY - get().startingCords.y
-        let r = Math.sqrt(width ** 2 + height ** 2)
+        let r = Math.sqrt(width** 2 +  height** 2)
         get().draw(get().startingCords.x, get().startingCords.y, r)
       }
     }
@@ -197,10 +231,11 @@ export const useCircleStore = create((set, get) => ({
       useCanvasStore.getState().setMouseDown(true)
       const context = useCanvasStore.getState().context
       context.beginPath()
+      const mousePosition = useCanvasStore.getState().setMousePosition(e)
       set(() => ({
         startingCords: {
-          x: e.pageX - e.target.offsetLeft,
-          y: e.pageY - e.target.offsetTop,
+          x: mousePosition.x,
+          y: mousePosition.y,
         },
       }))
       set(() => ({ save: canvas.toDataURL() }))
@@ -208,8 +243,8 @@ export const useCircleStore = create((set, get) => ({
   },
   draw: (x, y, r) => {
     const img = new Image()
-    const context = useCanvasStore.getState().context
     const canvas = useCanvasStore.getState().canvas
+    const context = useCanvasStore.getState().context
     img.src = get().save
     img.onload = async () => {
       context.clearRect(0, 0, canvas.width, canvas.height)
@@ -234,8 +269,9 @@ export const useArtStore = create((set, get) => ({
         context.strokeStyle = "white"
         context.beginPath()
         context.moveTo(get().startingCords.x, get().startingCords.y)
-        get().draw(get().oldToX, get().oldToY)
+        get().draw(get().oldCordsTo.x, get().oldCordsTo.y)
         set(() => ({
+
           oldCordsTo: {
             x: e.pageX - e.target.offsetLeft,
             y: e.pageY - e.target.offsetTop,

@@ -30,6 +30,7 @@ export const useChatStore = create((set,get) => ({
     users: null,
     messageToEditID: null,
     isMessageEditorOpen: false,
+
     setUsers: (users) => set(() => ({ users: users })),
     setRoomID: (value) => set(() => ({ roomID: value })),
     setRoomName: (value) => set(() => ({ roomName: value })),
@@ -60,6 +61,7 @@ export const useChatStore = create((set,get) => ({
         set(() => ({ isMessageEditorOpen: false }))
         get().socket.send(JSON.stringify({event: "edit", edit :{oldMessageID: get().messageToEditID, newMessage: newMessage}}))
     },
+
     setListeners: () => {
         const socket = get().socket
         const user = useUserStore.getState().user
