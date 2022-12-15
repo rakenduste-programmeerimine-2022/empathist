@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {useNavbarStore, useUserStore} from "../../store/store";
+import { useNavbarStore, useUserStore } from "../../store/store"
 
 const Login = ({ isActive, setIsActive }) => {
   const [email, setEmail] = useState("")
@@ -9,9 +9,9 @@ const Login = ({ isActive, setIsActive }) => {
 
   const handleLogin = (e) => {
     login(email, password)
-        .then(()=>setEmail(''))
-        .then(()=>setPassword(''))
-        .then(()=>setIsActive(false))
+      .then(() => setEmail(""))
+      .then(() => setPassword(""))
+      .then(() => setIsActive(false))
   }
 
   const handleSwitch = () => {
@@ -33,49 +33,55 @@ const Login = ({ isActive, setIsActive }) => {
             ></button>
           </header>
           <section className="modal-card-body">
-              <div className="field">
-                <label className="label is-size-5">Email</label>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  ></input>
-                </div>
+            <div className="field">
+              <label className="label is-size-5">Email</label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                ></input>
               </div>
-              <div className="field">
-                <label className="label is-size-5">Password</label>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  ></input>
-                </div>
+            </div>
+            <div className="field">
+              <label className="label is-size-5">Password</label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                ></input>
               </div>
-              <div className="field">
-                <p>
-                  Don't have an account?
-                  <button className="button is-text" style={{color:"#2565AE"}} onClick={handleSwitch}>Sign up</button>
-                </p>
-              </div>
-              <div className="field is-grouped">
-                <p className="control">
-                  <button onClick={handleLogin} className="button is-link">Submit</button>
-                </p>
-                <p className="control">
-                  <button
-                    className="button is-link is-light"
-                    onClick={() => setIsActive(false)}
-                  >
-                    Cancel
-                  </button>
-                </p>
-              </div>
+            </div>
+            <div className="field is-grouped">
+              <p className="mt-2">Don't have an account?</p>
+              <button
+                className="button is-ghost p-0 ml-2"
+                style={{ color: "#2565AE" }}
+                onClick={handleSwitch}
+              >
+                Sign up
+              </button>
+            </div>
+            <div className="field is-grouped">
+              <p className="control">
+                <button onClick={handleLogin} className="button is-link">
+                  Submit
+                </button>
+              </p>
+              <p className="control">
+                <button
+                  className="button is-link is-light"
+                  onClick={() => setIsActive(false)}
+                >
+                  Cancel
+                </button>
+              </p>
+            </div>
           </section>
         </div>
       </div>

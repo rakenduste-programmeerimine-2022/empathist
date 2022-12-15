@@ -278,3 +278,13 @@ canvas{
     opacity: 0;
   }
 }
+
+.welcome-page-section{
+  margin-top: 15vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
