@@ -90,7 +90,8 @@ function handleDisconnect() {
         .map(room=>room.users.length?{...room,users:[...room.users
                 .filter(user=>{
                    if (activeUsers.includes(user)){
-                       return saveMessage({...defaultMessage,content:`${user.username} has disconnected`},room.id)
+                       saveMessage({...defaultMessage,content:`${user.username} has disconnected`},room.id)
+                       return broadcast(room.id,"chatUpdate")
                    }
                 })]}:room)
 }
@@ -107,7 +108,9 @@ function broadcast(roomID,event){
                         roomID: room.id,
                         room: room.name,
                         users: room.users,
-                        messages: room.messages,
+                        messages: room.messages
+                            .map(message => formatMessage(message)),
+
                         serverMessages: room.serverMessages,
                         rooms: mapRooms(client),
                         roomType: room.type
@@ -118,7 +121,30 @@ function broadcast(roomID,event){
     })
 }
 
+const formatMessage = (message) => ({ //mb try dto
+    id:message.id,
+    username:message.username,
+    content:message.content,
+    sentAt:message.sentAt,
+    type:message.type,
+    userColors:message.userColors
+})
 
+const editMessage = (edit,ws) => {
+    const room = rooms.find(item => item.id === ws.roomID)
+    const messageIndex = room.messages.findIndex(item => item.id === parseInt(edit.oldMessageID))
+    console.log(messageIndex,edit.oldMessageID,room.messages,ws.roomID)
+    if (messageIndex !== -1){
+        if (ws.id === room.messages[messageIndex].authorId) {
+            room.messages[messageIndex].content = edit.newMessage
+            return true
+        }
+        console.log("not author")
+        return false
+    }
+    console.log("not found")
+    return false
+}
 
 async function checkUsername(username, id) {
     const user = await User.findOne({username, id})
@@ -258,8 +284,6 @@ const mapRooms = (ws) => rooms
         type:room.type
     }))
 
-app.use(cors())
-app.use(express.json())
 app.ws('/chat', (ws, req) => {
     ws.connected = false
     console.log("New page opened")
@@ -272,6 +296,7 @@ app.ws('/chat', (ws, req) => {
                     id: Math.floor(Math.random() * Math.floor(Math.random() * new Date().getTime())),
                     content: message.content,
                     username: ws.username,
+                    authorId: ws.id,
                     sentAt: new Date(),
                     type: "user-message",
                     userColors: ws.userColors
@@ -387,6 +412,19 @@ app.ws('/chat', (ws, req) => {
 
             if (message.event === "draw") {
                 const saved = saveCanvas(ws.roomID, message.canvas)
+            }
+
+            if (message.event === "edit") {
+                const edit = message?.edit
+                if (edit){
+                    const edited = editMessage(edit, ws)
+                    if (edited){
+                        broadcast(ws.roomID, "chatUpdate")
+                    }
+                    else {
+                        ws.send(JSON.stringify({event: "error", content: `Could not edit message`}))
+                    }
+                }
             }
 
         } else {

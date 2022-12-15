@@ -28,6 +28,9 @@ export const useChatStore = create((set,get) => ({
     roomID: null,
     roomName: null,
     users: null,
+    messageToEditID: null,
+    isMessageEditorOpen: false,
+
     setUsers: (users) => set(() => ({ users: users })),
     setRoomID: (value) => set(() => ({ roomID: value })),
     setRoomName: (value) => set(() => ({ roomName: value })),
@@ -49,6 +52,16 @@ export const useChatStore = create((set,get) => ({
         console.log(`Trying to send message ${message}`)
         get().socket.send(JSON.stringify({event: "message", content: message}))
     },
+    handleOpenMessageEditor: (messageID) => {
+        set(() => ({ messageToEditID: messageID }))
+        set(() => ({ isMessageEditorOpen: true }))
+    },
+    handleSendEditMessage: (newMessage) => {
+        console.log(`Trying to edit message ${get().messageToEditID} to ${newMessage}`)
+        set(() => ({ isMessageEditorOpen: false }))
+        get().socket.send(JSON.stringify({event: "edit", edit :{oldMessageID: get().messageToEditID, newMessage: newMessage}}))
+    },
+
     setListeners: () => {
         const socket = get().socket
         const user = useUserStore.getState().user
