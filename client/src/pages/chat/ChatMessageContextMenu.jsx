@@ -1,9 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faReply,faTrash,faPen,faCheck,faFaceSmile } from '@fortawesome/free-solid-svg-icons'
-
-
-
-
+import {useEffect} from "react";
+import {useChatStore} from "../../store/chatStore";
 
 const options = [
     {id:1,name:"Reply",icon:faReply,action:"reply"},
@@ -13,11 +11,36 @@ const options = [
     {id:5,name:"Delete",icon:faTrash,action:"delete"},
 ]
 
-const ChatMessageContextMenu = ({position,isActive}) => {
+const ChatMessageContextMenu = ({position,isActive,targetMessage}) => {
+    const handleOpenMessageEditor = useChatStore(state => state.handleOpenMessageEditor)
     const handleClick = (action) => {
         console.log(action)
+        switch (action) {
+            case "reply":
+                console.log("reply")
+                break;
+            case "react":
+                console.log("react")
+                break;
+            case "select":
+                console.log("select")
+                break;
+            case "edit":
+                handleOpenMessageEditor(targetMessage)
+                console.log("edit",targetMessage)
+                break;
+            case "delete":
+                console.log("delete")
+                break;
+            default:
+                console.log("No action found")
+        }
         isActive(false)
     }
+
+    useEffect(() => {
+        console.log(targetMessage)
+    },[targetMessage])
 
     return (
         <div onMouseLeave={()=>isActive(false)} className="chat-message-context-menu-container is-flex-direction-row has-background-white"

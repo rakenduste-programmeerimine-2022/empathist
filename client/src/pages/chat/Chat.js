@@ -6,11 +6,10 @@ import Canvas from "../canvas/Canvas"
 import ChatMessageContextMenu from "./ChatMessageContextMenu";
 import {useChatStore} from "../../store/chatStore";
 import ServerMessage from "../../components/global/chat/ServerMessage";
+import ChatMessage from "./ChatMessage";
+import {MessageInput} from "./MessageInput";
 
 const Chat = () => {
-  const [message, setMessage] = useState("")
-  const sendMessage = useChatStore((state) => state.sendMessage)
-  const user = useUserStore((state) => state.user)
   const roomID = useChatStore((state) => state.roomID)
   const isFindChatOpen = useNavbarStore((state) => state.isFindChatOpen)
   const messages = useChatStore((state) => state.messages)
@@ -22,22 +21,11 @@ const Chat = () => {
   const [isOpenMessageContextMenu,setIsOpenMessageContextMenu] = useState(false)
   const [messageContextMenuPosition,setMessageContextMenuPosition] = useState({x:0,y:0})
   const unreadMessage = useRef(null)
-  const [isError,setIsError] = useState(false)
   const [scrollAtNext,setScrollAtNext] = useState(false)
   const [isNewServerMessage,setIsNewServerMessage] = useState(false)
+  const targetMessage = useRef(null)
 
-  const handleMessageSubmit =  () => {
-    if (message.length) {
-      sendMessage(message)
-      setMessage("")
-      setIsError(false)
-      setScrollAtNext(true)
-    } else {
-      console.log("Message is too short")
-      setIsError(true)
-    }
 
-  }
   const handleScrollToNewMessage = () => {
     unreadMessage.current.scrollIntoView({behavior: "smooth"})
     setIsNewMessageInChat(false)
@@ -60,6 +48,7 @@ const Chat = () => {
 
 
   const handleChatMessageContextMenu = (e) => {
+    targetMessage.current = e.target.id
     if (isOpenMessageContextMenu) {
         setIsOpenMessageContextMenu(false)
     }
@@ -88,7 +77,11 @@ const Chat = () => {
                       {roomName?.length ? roomName : "Chat"}
                     </div>
                   </section>
-                  {isOpenMessageContextMenu&&<ChatMessageContextMenu position={messageContextMenuPosition} isActive={setIsOpenMessageContextMenu} />}
+                  {isOpenMessageContextMenu&&<ChatMessageContextMenu
+                      position={messageContextMenuPosition}
+                      isActive={setIsOpenMessageContextMenu}
+                      targetMessage={targetMessage.current}
+                  />}
                   <section className="hero-body p-2 chat mt-3" onClick={()=>setIsOpenMessageContextMenu(false)}>
                     {isNewServerMessage&&<ServerMessage messages={serverMessages}/>}
                     {isNewMessageInChat && (
@@ -97,54 +90,11 @@ const Chat = () => {
                       />
                     )}
                     {messages.length
-                        ?(messages.map((message) =>
-                          <article
-                            className={`message chat-element ${
-                              message.username === user.username ? "right" : "left"
-                            } `}
-                            key={new Date(message.sentAt).getTime()}
-                            style={{
-                              backgroundColor: message.userColors?.background,
-                            }}
-                            onMouseEnter={(e)=>handleChatMessageContextMenu(e)}
-                          >
-                            <div
-                              className="message-header p-2"
-                              style={{
-                                backgroundColor: message.userColors?.header,
-                              }}
-                            >
-                              {message.username}
-                            </div>
-                            <div
-                              className="message-body  p-2"
-                              style={{ color: message.userColors?.font }}
-                            >
-                              {message.content}
-                            </div>
-                            <span className="time m-1" ref={unreadMessage}>
-                              {new Date(message.sentAt).toLocaleTimeString("en-GB")}
-                            </span>
-                          </article>
-                        ))
+                        ? <ChatMessage messages={messages} handler={handleChatMessageContextMenu} unreadMessage={unreadMessage}/>
                         :<div className="notification is-empty">No messages found</div>
                     }
                   </section>
-                  <section className="input-field mt-4">
-                    <textarea
-                      className={isError ? "textarea has-fixed-size is-danger" : "textarea has-fixed-size"}
-                      placeholder="Type your message here..."
-                      rows="2"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    ></textarea>
-                    <button
-                      className="button is-info mt-3"
-                      onClick={handleMessageSubmit}
-                    >
-                      Send
-                    </button>
-                  </section>
+                  <MessageInput setScrollAtNext={setScrollAtNext}/>
                 </section>
               </div>
             </div>
