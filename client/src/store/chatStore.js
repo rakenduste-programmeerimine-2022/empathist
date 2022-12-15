@@ -94,7 +94,9 @@ export const useChatStore = create((set,get) => ({
             switch (data.event) {
                 case "chatUpdate":
                     get().setMessages(data.messages)
-                    get().setServerMessages(data.serverMessages)
+                    if (data.serverMessages!==get().serverMessages) {
+                        get().setServerMessages(data.serverMessages)
+                    }
                     get().setRooms(data.rooms)
                     if(data.messages.length > 3) {
                         get().setIsNewMessageInChat(true)

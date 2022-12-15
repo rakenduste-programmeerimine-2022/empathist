@@ -2,7 +2,7 @@ import {useChatStore} from "../../store/chatStore";
 import {useEffect, useState} from "react";
 import './MessageInput.css';
 
-export const MessageInput = ({setScrollAtNext}) => {
+const MessageInput = ({setScrollAtNext}) => {
 
     const messageToEditID = useChatStore(state => state.messageToEditID)
     const handleSendEditMessage = useChatStore(state => state.handleSendEditMessage)
@@ -56,3 +56,5 @@ export const MessageInput = ({setScrollAtNext}) => {
     </section>
     )
 }
+
+export default MessageInput
