@@ -146,8 +146,8 @@ const editMessage = (edit,ws) => {
     return false
 }
 
-async function checkUsername(username, id) {
-    const user = await User.findOne({username, id})
+async function checkUsername(username) {
+    const user = await User.findOne({username})
     if (user) {
         console.log(`User ${username} already exists in DB`)
         return false
@@ -157,7 +157,7 @@ async function checkUsername(username, id) {
         return false
     }
     activeUsers.forEach(user => {
-        if (user.username === username && user.id !== id) {
+        if (user.username === username) {
             console.log(`User ${username} is already taken`)
             return false
         }
@@ -233,7 +233,7 @@ async function connectUser(ws, message) {
         }
     }else {
         console.log(`checking ${message.username}`)
-        const isValidUsername = await checkUsername(message.username, message.id)
+        const isValidUsername = await checkUsername(message.username)
         console.log(`username is valid: ${isValidUsername}`)
         if (isValidUsername) {
             ws.id = (Math.floor(Math.random() * 100) + 1) +
