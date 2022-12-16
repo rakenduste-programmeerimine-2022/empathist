@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavbarStore, useUserStore } from "../../store/store"
 import Signup from "./Signup"
@@ -10,11 +10,11 @@ import {
   faMagnifyingGlass,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons"
-import {EnterName} from "./EnterName";
-import {Notification} from "../errors/Notification";
-import {InteractiveLogo} from "../navbar/InteractiveLogo";
-import {Logo} from "../navbar/Logo";
-import {useChatStore} from "../../store/chatStore";
+import { EnterName } from "./EnterName"
+import { Notification } from "../errors/Notification"
+import { InteractiveLogo } from "../navbar/InteractiveLogo"
+import { Logo } from "../navbar/Logo"
+import { useChatStore } from "../../store/chatStore"
 
 const findChat = { name: "Find chat", path: "/chat", icon: faMagnifyingGlass }
 const chat = { name: "Chat", path: "/chat", icon: faMessage }
@@ -34,8 +34,12 @@ const Navbar = () => {
   const isSignupOpen = useNavbarStore((state) => state.isSignupOpen)
   const roomID = useChatStore((state) => state.roomID)
   const globalNotification = useNavbarStore((state) => state.globalNotification)
-  const setGlobalNotification = useNavbarStore((state) => state.setGlobalNotification)
-  const setIsNotificationOpen = useNavbarStore((state) => state.setIsNotificationOpen)
+  const setGlobalNotification = useNavbarStore(
+    (state) => state.setGlobalNotification
+  )
+  const setIsNotificationOpen = useNavbarStore(
+    (state) => state.setIsNotificationOpen
+  )
   const [isSecretLogoOpen, setIsSecretLogoOpen] = useState(false)
 
   const handleLoginClick = () => {
@@ -59,21 +63,25 @@ const Navbar = () => {
     await logout()
     setGlobalNotification("You have logged out")
     setIsNotificationOpen(true)
-    window.location.replace(welcome.path);
+    window.location.replace(welcome.path)
   }
 
   useEffect(() => {
     setIsNotificationOpen(true)
     console.log("Notification is updated")
     // eslint-disable-next-line
-  },[globalNotification])
+  }, [globalNotification])
 
   return (
     <>
       <nav className="navbar is-dark" role="navigation">
         <div className="navbar-brand">
-            {isSecretLogoOpen ? <InteractiveLogo handleSwitch={setIsSecretLogoOpen}/> : <Logo handleSwitch={setIsSecretLogoOpen}/>}
-        <div
+          {isSecretLogoOpen ? (
+            <InteractiveLogo handleSwitch={setIsSecretLogoOpen} />
+          ) : (
+            <Logo handleSwitch={setIsSecretLogoOpen} />
+          )}
+          <div
             role="button"
             className={`navbar-burger ${navToggle}`}
             aria-label="menu"
@@ -91,45 +99,54 @@ const Navbar = () => {
           className={`navbar-menu is-size-4 has-background-dark ${navMenu}`}
         >
           <div className="navbar-start">
+            <Link
+              key={welcome.name}
+              to={welcome.path}
+              id="navItem"
+              className="navbar-item has-text-light is-size-4 px-5"
+            >
+              <span className="icon-text">
+                <span className="icon pr-2">
+                  <FontAwesomeIcon icon={welcome.icon} />
+                </span>
+                <span>{welcome.name}</span>
+              </span>
+            </Link>
+            <Link
+              key={roomID ? chat.name : findChat.name}
+              id="navItem"
+              className="navbar-item has-text-light is-size-4 px-5"
+              to={chat.path}
+              onClick={() => setISFindChatOpen(false)}
+            >
+              <span className="icon-text">
+                <span className="icon is-small pr-2">
+                  <FontAwesomeIcon
+                    className="fas"
+                    icon={roomID ? chat.icon : findChat.icon}
+                  />
+                </span>
+                <span>{roomID ? chat.name : findChat.name}</span>
+              </span>
+            </Link>
+            {roomID && (
               <Link
-                key={welcome.name}
-                to={welcome.path}
-                id="navItem"
-                className="navbar-item has-text-light is-size-4 px-5"
+                onClick={
+                  isFindChatOpen
+                    ? () => setISFindChatOpen(false)
+                    : () => setISFindChatOpen(true)
+                }
+                className=" navbar-item is-link has-text-light is-size-4 px-5"
+                to={findChat.path}
               >
                 <span className="icon-text">
                   <span className="icon pr-2">
-                    <FontAwesomeIcon icon={welcome.icon} />
+                    <FontAwesomeIcon icon={findChat.icon} />
                   </span>
-                  <span>{welcome.name}</span>
+                  <span>{findChat.name}</span>
                 </span>
               </Link>
-              <Link
-                  key={roomID?chat.name:findChat.name}
-                  id="navItem"
-                  className="navbar-item has-text-light is-size-4 px-5"
-                  to={chat.path}
-                  onClick={()=>setISFindChatOpen(false)}
-              >
-              <span className="icon-text">
-                <span className="icon is-small pr-2">
-                  <FontAwesomeIcon className="fas" icon={roomID?chat.icon:findChat.icon} />
-                </span>
-                <span>{roomID?chat.name:findChat.name}</span>
-              </span>
-              </Link>
-            {roomID&&<Link
-                onClick={isFindChatOpen?()=>setISFindChatOpen(false):()=>setISFindChatOpen(true)}
-                className=" navbar-item is-link has-text-light is-size-4 px-5"
-                to={findChat.path}>
-              <span className="icon-text">
-                <span className="icon pr-2">
-                  <FontAwesomeIcon icon={findChat.icon} />
-                </span>
-                <span>{findChat.name}</span>
-              </span>
-            </Link>}
-
+            )}
           </div>
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable mr-3">
@@ -138,40 +155,48 @@ const Navbar = () => {
                   <span className="icon pr-2">
                     <FontAwesomeIcon icon={faUser} />
                   </span>
-                  <span>{isAuth?`${user.username}(member)`:user.username?`${user.username}(guest)`:"Profile"}</span>
+                  <span>
+                    {isAuth
+                      ? `${user.username}(member)`
+                      : user.username
+                      ? `${user.username}(guest)`
+                      : "Profile"}
+                  </span>
                 </span>
               </div>
               <div className="navbar-dropdown is-right has-background-dark">
                 {isAuth ? (
                   <button
-                    className="navbar-item is-size-4 button is-ghost has-text-black"
+                    className="navbar-item is-size-4 button is-ghost has-text-light"
                     onClick={handleLogout}
                   >
                     Logout
                   </button>
                 ) : (
                   <button
-                    className="navbar-item is-size-4 button is-ghost has-text-black"
+                    className="navbar-item is-size-4 button is-ghost has-text-light"
                     onClick={() => handleLoginClick()}
                   >
                     Login
                   </button>
                 )}
-                {!isAuth&&<button
-                  className="navbar-item is-size-4 button is-ghost has-text-black"
-                  onClick={() => handleSignupClick()}
-                >
-                  Sign up
-                </button>}
+                {!isAuth && (
+                  <button
+                    className="navbar-item is-size-4 button is-ghost has-text-light"
+                    onClick={() => handleSignupClick()}
+                  >
+                    Sign up
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
       </nav>
-      <Signup isActive={isSignupOpen} setIsActive={setIsSignupOpen}/>
-      <Login isActive={isLoginOpen} setIsActive={setIsLoginOpen}/>
-      <EnterName/>
-      <Notification/>
+      <Signup isActive={isSignupOpen} setIsActive={setIsSignupOpen} />
+      <Login isActive={isLoginOpen} setIsActive={setIsLoginOpen} />
+      <EnterName />
+      <Notification />
     </>
   )
 }
